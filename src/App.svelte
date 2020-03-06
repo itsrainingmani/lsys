@@ -95,8 +95,8 @@
     <br />
     <div
       transition:fly={{ y: -50, duration: 500 }}
-      class="svg-box flex items-center transition-colors duration-100
-      ease-in-out bg-white shadow-md focus:outline-0 border border-transparent
+      class="svg-box items-center transition-colors duration-100 ease-in-out
+      bg-white shadow-md focus:outline-0 border border-transparent
       placeholder-gray-600 rounded-lg block w-full appearance-none
       leading-normal">
       <svg viewBox="0 0 100 100">
