@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
-  import { fly } from "svelte/transition";
+  import { fly, draw } from "svelte/transition";
+  import { quintOut } from "svelte/easing";
   import Footer from "./Footer.svelte";
   import { path } from "d3-path";
 
@@ -14,7 +15,9 @@
     }, 1000);
   });
 
-  let turtle_formula = "";
+  let turtle_formula = "Heart";
+  let ctx =
+    "M 10,30 A 20,20 0,0,1 50,30 A 20,20 0,0,1 90,30 Q 90,60 50,90 Q 10,60 10,30 z";
 
   // d3 path
   // let ctx = path();
@@ -24,7 +27,6 @@
 
 <style>
   p {
-    font-family: "Rubik", sans-serif;
     font-size: 1.5em;
   }
 
@@ -38,7 +40,7 @@
   }
 
   svg {
-    stroke-width: 1%;
+    stroke-width: 2%;
     stroke-opacity: 90%;
   }
 
@@ -78,10 +80,10 @@
       appearance-none leading-normal">
       <svg viewBox="0 0 100 100">
         <path
+          transition:draw={{ duration: 5000, delay: 500, easing: quintOut }}
           stroke="blue"
           fill="none"
-          d="M 10,30 A 20,20 0,0,1 50,30 A 20,20 0,0,1 90,30 Q 90,60 50,90 Q
-          10,60 10,30 z" />
+          d={ctx} />
       </svg>
     </div>
   {/if}
