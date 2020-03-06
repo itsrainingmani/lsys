@@ -18,22 +18,8 @@ main {
 	margin: 0 auto;
 }
 
-h1 {
-	color: #ff3e00;
-	font-family: "Oleo Script Swash Caps", cursive;
-	font-style: italic;
-	font-size: 4em;
-	font-weight: 100;
-}
-
 @media (min-width: 640px) {
 	main {
 		max-width: none;
 	}
-}
-
-footer {
-	text-align: center;
-	font-family: "Rubik", sans-serif;
-	font-size: 1em;
 }
