@@ -5,7 +5,31 @@
   import Footer from "./Footer.svelte";
   import { path } from "d3-path";
 
+  // Function that performs a typewriter animation on a given node.
+  // the node has to have a value object to operate on
+  // the default speed is 100
+  function typewriter(node, { speed = 100 }) {
+    console.log(speed);
+    const text = node.value;
+    const duration = text.length * speed;
+
+    return {
+      duration,
+      tick: t => {
+        const i = ~~(text.length * t);
+        node.value = text.slice(0, i);
+      }
+    };
+  }
+
   let enableTransition = false;
+  const sample_svgs = [
+    [
+      "Heart",
+      "M 10,30 A 20,20 0,0,1 50,30 A 20,20 0,0,1 90,30 Q 90,60 50,90 Q 10,60 10,30 z"
+    ]
+  ];
+  let [turtle_formula, ctx] = sample_svgs[0];
 
   // When the component is mounted, set enableTransition to true
   // This will trigger the animation
@@ -14,10 +38,6 @@
       enableTransition = true;
     }, 1000);
   });
-
-  let turtle_formula = "Heart";
-  let ctx =
-    "M 10,30 A 20,20 0,0,1 50,30 A 20,20 0,0,1 90,30 Q 90,60 50,90 Q 10,60 10,30 z";
 
   // d3 path
   // let ctx = path();
@@ -62,7 +82,9 @@
       <p>An Interactive Fractal Generator</p>
       <br />
       <input
+        in:typewriter={{ speed: 500 }}
         title="Turtle Formula Input"
+        type="text"
         class="transition-colors duration-100 ease-in-out bg-white shadow-md
         focus:outline-0 border border-transparent placeholder-gray-600
         rounded-lg py-2 pr-4 pl-4 block w-full appearance-none leading-normal
