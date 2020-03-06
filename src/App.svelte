@@ -22,12 +22,6 @@
     font-size: 1.5em;
   }
 
-  @media (max-width: 640px) {
-    p {
-      font-size: 1em;
-    }
-  }
-
   h1 {
     color: #ff3e00;
     font-family: "Oleo Script Swash Caps", cursive;
@@ -37,7 +31,11 @@
     line-height: normal;
   }
 
+  /* Media Query - this only fires when the condition is met */
   @media (max-width: 640px) {
+    p {
+      font-size: 1em;
+    }
     h1 {
       font-size: 3em;
     }
