@@ -4,32 +4,19 @@
   import { quintOut } from "svelte/easing";
   import Footer from "./Footer.svelte";
   import { path } from "d3-path";
-
-  // Function that performs a typewriter animation on a given node.
-  // the node has to have a value object to operate on
-  // the default speed is 100
-  function typewriter(node, { speed = 100 }) {
-    console.log(speed);
-    const text = node.value;
-    const duration = text.length * speed;
-
-    return {
-      duration,
-      tick: t => {
-        const i = ~~(text.length * t);
-        node.value = text.slice(0, i);
-      }
-    };
-  }
+  import { typewriter } from "./utils";
 
   let enableTransition = false;
+  let turtle_formula = "";
+  let ctx = "";
+  let svg_dims = { w: 100, h: 100 };
   const sample_svgs = [
     [
       "Heart",
       "M 10,30 A 20,20 0,0,1 50,30 A 20,20 0,0,1 90,30 Q 90,60 50,90 Q 10,60 10,30 z"
     ]
   ];
-  let [turtle_formula, ctx] = sample_svgs[0];
+  // let [turtle_formula, ctx] = sample_svgs[0];
 
   // When the component is mounted, set enableTransition to true
   // This will trigger the animation
@@ -39,10 +26,16 @@
     }, 1000);
   });
 
-  // d3 path
-  // let ctx = path();
-  // ctx.moveTo(5, 5);
-  // ctx.lineTo(6, 1);
+  function handleInputChange(event) {
+    console.log(svg_dims);
+    // Move the svg context to the center
+    ctx = path();
+    ctx.moveTo(svg_dims.w / 2, svg_dims.h / 2);
+    let t = turtle_formula[0];
+    if (t === "F") {
+      ctx.lineTo(svg_dims.w / 2, svg_dims.h / 2 - 6);
+    }
+  }
 </script>
 
 <style>
@@ -82,7 +75,6 @@
       <p>An Interactive Fractal Generator</p>
       <br />
       <input
-        in:typewriter={{ speed: 500 }}
         title="Turtle Formula Input"
         type="text"
         class="transition-colors duration-100 ease-in-out bg-white shadow-md
@@ -90,6 +82,7 @@
         rounded-lg py-2 pr-4 pl-4 block w-full appearance-none leading-normal
         ds-input text-center"
         bind:value={turtle_formula}
+        on:input={handleInputChange}
         aria-label="Turtle"
         autofocus />
     </div>
@@ -101,11 +94,7 @@
       placeholder-gray-600 rounded-lg py-2 pr-4 pl-4 block w-full
       appearance-none leading-normal">
       <svg viewBox="0 0 100 100">
-        <path
-          transition:draw={{ duration: 5000, delay: 500, easing: quintOut }}
-          stroke="blue"
-          fill="none"
-          d={ctx} />
+        <path stroke="blue" fill="none" d={ctx} />
       </svg>
     </div>
   {/if}
