@@ -89,8 +89,7 @@
         ds-input text-center"
         bind:value={turtle_formula}
         on:input={handleInputChange}
-        aria-label="Turtle"
-        autofocus />
+        aria-label="Turtle" />
     </div>
     <br />
     <div
