@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { fly } from "svelte/transition";
   import Footer from "./Footer.svelte";
+  import { path } from "d3-path";
 
   let enableTransition = false;
 
@@ -14,6 +15,11 @@
   });
 
   let turtle_formula = "";
+
+  // d3 path
+  let ctx = path();
+  ctx.moveTo(5, 5);
+  ctx.lineTo(6, 1);
 </script>
 
 <style>
@@ -29,6 +35,11 @@
     font-size: 4em;
     font-weight: 100;
     line-height: normal;
+  }
+
+  svg {
+    stroke-width: 1%;
+    stroke-opacity: 90%;
   }
 
   /* Media Query - this only fires when the condition is met */
@@ -57,6 +68,15 @@
         bind:value={turtle_formula}
         aria-label="Turtle"
         autofocus />
+    </div>
+    <br />
+    <div
+      class="transition-colors duration-100 ease-in-out bg-white shadow-md
+      focus:outline-0 border border-transparent placeholder-gray-600 rounded-lg
+      py-2 pr-4 pl-4 block w-full appearance-none leading-normal">
+      <svg viewBox="0 0 10 10" class=".relative">
+        <path stroke="black" fill="none" d={ctx.toString()} />
+      </svg>
     </div>
   {/if}
 </main>
