@@ -1,31 +1,43 @@
 <script>
   import { fly } from "svelte/transition";
   import { path } from "d3-path";
+  import { turtleInput } from "./stores";
   /** Only valid instructions are 'F', 'f', '-', '+'
    * 'F' means move forward one unit and trace the path with a line.
    * 'f' means move forward one unit but don't draw anything.
    * '-' means rotate counter-clockwise but don't move.
    * '+' means rotate clockwise but don't move.
    */
-  export let formula;
-  let ctx = "";
   let svg_w = 100; // This is relative to the actual width in pixels
   let svg_h = 100; // This is relative to the actual height in pixels
   const DEG_TO_RAD = Math.PI / 180;
   /**
    * SVG Layout -
    * (0,0) is at the top left corner
-   * (x, y) is at bottom left
+   * (x, y) is at bottom right
    */
-  function draw_svg(f) {
-    console.log(svg_w, svg_h);
-    // Move the svg context to the center
-    ctx = path();
-    ctx.moveTo(svg_w / 2, svg_h / 2);
-    let t = f[0];
-    if (t === "F") {
-      ctx.lineTo(svg_w / 2, svg_h / 2 - 6);
-    }
+  function draw_svg(f, turn_amt = 45) {
+    console.log(f);
+    // Always center the svg context at the bottom
+    let location = { x: svg_w / 2, y: svg_h };
+    let ctx = path();
+    ctx.moveTo(location.x, location.y);
+
+    f.split("").forEach(t => {
+      switch (t) {
+        case "F":
+          location.y -= 2;
+          ctx.lineTo(location.x, location.y);
+          ctx.moveTo(location.x, location.y);
+          break;
+        case "f":
+          location.y -= 2;
+          ctx.moveTo(location.x, location.y);
+          break;
+      }
+    });
+
+    return ctx.toString();
   }
 </script>
 
@@ -47,6 +59,6 @@
   bg-white shadow-md focus:outline-0 border border-transparent
   placeholder-gray-600 rounded-lg block w-full appearance-none leading-normal">
   <svg viewBox="0 0 100 100">
-    <path stroke="blue" fill="none" d={ctx} />
+    <path stroke="blue" fill="none" d={draw_svg($turtleInput)} />
   </svg>
 </div>
