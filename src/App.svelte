@@ -22,6 +22,8 @@
     }, 1000);
   });
 
+  let turtleScale = 1;
+
   function handleInput(event) {
     console.log(event.inputType);
     console.log(event.data);
@@ -59,6 +61,20 @@
     h1 {
       font-size: 3em;
     }
+
+    main {
+      width: 80%;
+      max-width: 320px;
+    }
+  }
+
+  input[type="range"]:hover {
+    cursor: pointer;
+  }
+
+  main {
+    width: 100%;
+    max-width: 500px;
   }
 </style>
 
@@ -71,15 +87,27 @@
       <input
         title="Turtle Formula Input"
         type="text"
-        class="transition-colors duration-100 ease-in-out bg-white shadow-md
+        class="transition-colors duration-100 ease-in-out bg-white shadow-lg
         focus:outline-0 border border-transparent placeholder-gray-600
-        rounded-lg py-2 px-4 block w-full appearance-none leading-normal
-        ds-input text-center"
+        rounded-lg py-2 px-4 block w-10/12 appearance-none leading-normal
+        ds-input text-center inline-block"
         on:input={handleInput}
         aria-label="Turtle" />
+      <br />
+      <br />
+      <Turtle svgScale={turtleScale} />
+      <br />
+      <input
+        class="transition-colors duration-100 ease-in-out focus:bg-gray-100
+        bg-white shadow-lg focus:outline-0 border border-transparent rounded-lg
+        py-2 px-4 block w-10/12 appearance-none leading-normal inline-block"
+        title="Turtle SVG Scaler"
+        type="range"
+        min="0.1"
+        max="1"
+        step="0.1"
+        bind:value={turtleScale} />
     </div>
-    <br />
-    <Turtle />
   {/if}
 </main>
 <Footer />
