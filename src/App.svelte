@@ -1,9 +1,9 @@
 <script>
   import { onMount } from "svelte";
   import { fly, draw } from "svelte/transition";
-  // import { quintOut } from "svelte/easing";
-  import Footer from "./Footer";
-  import Turtle from "./Turtle";
+  import Footer from "./Footer.svelte";
+  import Turtle from "./Turtle.svelte";
+  import { turtleInput } from "./stores";
 
   let enableTransition = false;
   let formula = "";
@@ -21,6 +21,20 @@
       enableTransition = true;
     }, 1000);
   });
+
+  function handleInput(event) {
+    console.log(event.inputType);
+    console.log(event.data);
+
+    switch (event.inputType) {
+      case "insertText":
+        turtleInput.update(t => t + event.data);
+        break;
+      case "deleteContentBackward":
+        turtleInput.update(t => t.slice(0, -1));
+        break;
+    }
+  }
 </script>
 
 <style>
@@ -61,11 +75,11 @@
         focus:outline-0 border border-transparent placeholder-gray-600
         rounded-lg py-2 px-4 block w-full appearance-none leading-normal
         ds-input text-center"
-        bind:value={formula}
+        on:input={handleInput}
         aria-label="Turtle" />
     </div>
     <br />
-    <Turtle {formula} />
+    <Turtle />
   {/if}
 </main>
 <Footer />
