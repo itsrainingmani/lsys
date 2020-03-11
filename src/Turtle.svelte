@@ -19,20 +19,29 @@
   function draw_svg(f, turn_amt = 45) {
     console.log(f);
     // Always center the svg context at the bottom
-    let location = { x: svg_w / 2, y: svg_h };
+    let location = { x: svg_w / 2, y: svg_h, angle: 0 };
     let ctx = path();
     ctx.moveTo(location.x, location.y);
 
     f.split("").forEach(t => {
+      let { x, y, angle } = location;
       switch (t) {
         case "F":
-          location.y -= 2;
-          ctx.lineTo(location.x, location.y);
-          ctx.moveTo(location.x, location.y);
+          location.x = x + Math.sin(angle * DEG_TO_RAD);
+          location.y = y - Math.cos(angle * DEG_TO_RAD);
+          ctx.lineTo(x, y);
+          ctx.moveTo(x, y);
           break;
         case "f":
-          location.y -= 2;
-          ctx.moveTo(location.x, location.y);
+          location.x = x + Math.sin(angle * DEG_TO_RAD);
+          location.y = y - Math.cos(angle * DEG_TO_RAD);
+          ctx.moveTo(x, y);
+          break;
+        case "+":
+          location.angle = (angle + turn_amt) % 360;
+          break;
+        case "-":
+          location.angle = (angle - turn_amt) % 360;
           break;
       }
     });
