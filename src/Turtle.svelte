@@ -8,8 +8,9 @@
    * '-' means rotate counter-clockwise but don't move.
    * '+' means rotate clockwise but don't move.
    */
-  let svg_w = 100; // This is relative to the actual width in pixels
-  let svg_h = 100; // This is relative to the actual height in pixels
+  let svg_w = 20; // This is relative to the actual width in pixels
+  let svg_h = 20; // This is relative to the actual height in pixels
+  let svgViewBox = `0 0 ${svg_w} ${svg_h}`;
   const DEG_TO_RAD = Math.PI / 180;
   /**
    * SVG Layout -
@@ -19,29 +20,29 @@
   function draw_svg(f, turn_amt = 45) {
     console.log(f);
     // Always center the svg context at the bottom
-    let location = { x: svg_w / 2, y: svg_h, angle: 0 };
+    let loc = { x: svg_w / 2, y: svg_h, angle: 0 };
     let ctx = path();
-    ctx.moveTo(location.x, location.y);
+    ctx.moveTo(loc.x, loc.y);
 
     f.split("").forEach(t => {
-      let { x, y, angle } = location;
+      let { x, y, angle } = loc;
       switch (t) {
         case "F":
-          location.x = x + Math.sin(angle * DEG_TO_RAD);
-          location.y = y - Math.cos(angle * DEG_TO_RAD);
-          ctx.lineTo(x, y);
-          ctx.moveTo(x, y);
+          loc.x = x + Math.sin(angle * DEG_TO_RAD);
+          loc.y = y - Math.cos(angle * DEG_TO_RAD);
+          ctx.lineTo(loc.x, loc.y);
+          ctx.moveTo(loc.x, loc.y);
           break;
         case "f":
-          location.x = x + Math.sin(angle * DEG_TO_RAD);
-          location.y = y - Math.cos(angle * DEG_TO_RAD);
-          ctx.moveTo(x, y);
+          loc.x = x + Math.sin(angle * DEG_TO_RAD);
+          loc.y = y - Math.cos(angle * DEG_TO_RAD);
+          ctx.moveTo(loc.x, loc.y);
           break;
         case "+":
-          location.angle = (angle + turn_amt) % 360;
+          loc.angle = (angle + turn_amt) % 360;
           break;
         case "-":
-          location.angle = (angle - turn_amt) % 360;
+          loc.angle = (angle - turn_amt) % 360;
           break;
       }
     });
@@ -67,7 +68,7 @@
   class="svg-box items-center transition-colors duration-100 ease-in-out
   bg-white shadow-md focus:outline-0 border border-transparent
   placeholder-gray-600 rounded-lg block w-full appearance-none leading-normal">
-  <svg viewBox="0 0 100 100">
+  <svg viewBox={svgViewBox}>
     <path stroke="blue" fill="none" d={draw_svg($turtleInput)} />
   </svg>
 </div>
