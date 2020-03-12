@@ -68,14 +68,18 @@
     }
   }
 
+  input[type="range"] {
+    background-color: transparent;
+  }
+
   input[type="range"]:hover {
     cursor: pointer;
   }
 
-  main {
+  /* main {
     width: 100%;
-    max-width: 500px;
-  }
+    max-width: 400px;
+  } */
 </style>
 
 <main class="flex-grow self-center">
@@ -89,18 +93,12 @@
         type="text"
         class="transition-colors duration-100 ease-in-out bg-white shadow-lg
         focus:outline-0 border border-transparent placeholder-gray-600
-        rounded-lg py-2 px-4 block w-10/12 appearance-none leading-normal
-        ds-input text-center inline-block"
+        rounded-lg py-2 px-4 block w-full appearance-none leading-normal
+        ds-input text-center"
         on:input={handleInput}
         aria-label="Turtle" />
-      <br />
-      <br />
       <Turtle svgScale={turtleScale} />
-      <br />
       <input
-        class="transition-colors duration-100 ease-in-out focus:bg-gray-100
-        bg-white shadow-lg focus:outline-0 border border-transparent rounded-lg
-        py-2 px-4 block w-10/12 appearance-none leading-normal inline-block"
         title="Turtle SVG Scaler"
         type="range"
         min="0.1"

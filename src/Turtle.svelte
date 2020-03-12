@@ -77,7 +77,8 @@
   transition:fly={{ y: -50, duration: 500 }}
   class="svg-box items-center transition-colors duration-100 ease-in-out
   bg-white shadow-lg focus:outline-0 border border-transparent
-  placeholder-gray-600 rounded-lg block w-full appearance-none leading-normal">
+  placeholder-gray-600 rounded-lg block w-full appearance-none leading-normal
+  my-2">
   <svg viewBox={svgViewBox} style={svgStrokeWidth}>
     <path d={draw_svg($turtleInput)} transform={svgTransform} />
   </svg>
