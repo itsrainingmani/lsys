@@ -1,10 +1,9 @@
 <script>
   import { fly } from "svelte/transition";
   import { path } from "d3-path";
-  import { turtleInput } from "./stores";
+  import { turtleInput, turtleIter } from "./stores";
 
   export let svgScale;
-  export let iterations = 1;
   /** Only valid instructions are 'F', 'f', '-', '+'
    * 'F' means move forward one unit and trace the path with a line.
    * 'f' means move forward one unit but don't draw anything.
@@ -28,6 +27,10 @@
   turtleInput.subscribe(value => {
     turtleFormula = transformSequence(value);
     console.log(turtleFormula);
+  });
+
+  turtleIter.subscribe(value => {
+    console.log(value);
   });
 
   // The input sequence has the following format:
@@ -143,6 +146,6 @@
     style={svgStrokeWidth}
     on:mouseup={handleMouseUp}
     on:mousedown={handleMouseDown}>
-    <path d={draw_svg($turtleInput)} transform={svgTransform} />
+    <path d={draw_svg(turtleFormula)} transform={svgTransform} />
   </svg>
 </div>
