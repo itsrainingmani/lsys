@@ -52,11 +52,22 @@
     }
     h1 {
       font-size: 3em;
+      padding-top: 0.25rem;
+      padding-bottom: 0.25rem;
     }
 
     main {
       width: 80%;
       max-width: 320px;
+    }
+
+    #turtle-inputs {
+      flex-direction: column;
+    }
+
+    #turtle-inputs input[type="text"] {
+      width: 100%;
+      margin-bottom: 0.25rem;
     }
   }
 
@@ -80,17 +91,28 @@
     <div transition:fly={{ y: -50, duration: 500 }}>
       <p>An Interactive Fractal Generator</p>
       <br />
-      <input
-        title="Turtle Formula Input"
-        type="text"
-        placeholder="Turtle Formula:"
-        class="transition-colors duration-100 ease-in-out bg-white shadow-lg
-        focus:outline-0 border border-transparent placeholder-gray-600
-        rounded-lg py-2 px-4 block w-full appearance-none leading-normal
-        ds-input text-center"
-        on:keypress={handleInput}
-        bind:value={formula}
-        aria-label="Turtle" />
+      <div class="flex" id="turtle-inputs">
+        <input
+          title="Turtle Formula Input"
+          type="text"
+          placeholder="Turtle Formula:"
+          class="transition-colors duration-100 ease-in-out bg-white shadow-md
+          focus:outline-0 border border-transparent placeholder-gray-600
+          rounded-md py-2 px-4 block w-5/6 mr-1 appearance-none leading-tight
+          ds-input text-center"
+          on:keypress={handleInput}
+          bind:value={formula}
+          aria-label="Turtle Formula Input" />
+        <input
+          title="Formula Iterations"
+          type="number"
+          min="1"
+          class="transition-colors duration-100 ease-in-out bg-white shadow-md
+          focus:outline-0 border border-transparent placeholder-gray-600
+          rounded-md py-2 px-2 block w-1/6 appearance-none leading-tight
+          ds-input text-center"
+          aria-label="Formula Iterations" />
+      </div>
       <Turtle svgScale={turtleScale} />
       <input
         title="Turtle SVG Scaler"
