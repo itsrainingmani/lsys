@@ -14,7 +14,12 @@
   let svg_h = 100; // This is relative to the actual height in pixels
   let svgViewBox = `-${svg_w / 2} -${svg_h / 2} ${svg_w} ${svg_h}`;
 
-  $: svgTransform = `scale(${svgScale})`;
+  let startMoveX = 0;
+  let startMoveY = 0;
+  let svgMoveX = 0;
+  let svgMoveY = 0;
+
+  $: svgTransform = `scale(${svgScale}) translate(${svgMoveX} ${svgMoveY})`;
   $: svgStrokeWidth = `stroke-width: ${0.7 - (svgScale * 1.5) / 70}%`;
   const DEG_TO_RAD = Math.PI / 180;
   /**
@@ -23,7 +28,10 @@
    * (x, y) is at bottom right
    */
   function draw_svg(f, turn_amt = 45, move_amt = 4) {
-    console.log(f);
+    if (f.length === 0) {
+      svgMoveX = 0;
+      svgMoveY = 0;
+    }
     // Always center the svg context at the bottom
     // let loc = { x: svg_w / 2, y: svg_h, angle: 0 };
     let loc = { x: 0, y: 0, angle: 0 };
@@ -55,6 +63,20 @@
 
     return ctx.toString();
   }
+
+  // function handleMouseMove(e) {
+  //   console.log(e.offsetX, e.offsetY);
+  // }
+
+  function handleMouseDown(e) {
+    startMoveX = e.offsetX;
+    startMoveY = e.offsetY;
+  }
+
+  function handleMouseUp(e) {
+    svgMoveX = (e.offsetX - startMoveX) / (5 * svgScale);
+    svgMoveY = (e.offsetY - startMoveY) / (5 * svgScale);
+  }
 </script>
 
 <style>
@@ -79,7 +101,11 @@
   bg-white shadow-lg focus:outline-0 border border-transparent
   placeholder-gray-600 rounded-lg block w-full appearance-none leading-normal
   my-2">
-  <svg viewBox={svgViewBox} style={svgStrokeWidth}>
+  <svg
+    viewBox={svgViewBox}
+    style={svgStrokeWidth}
+    on:mouseup={handleMouseUp}
+    on:mousedown={handleMouseDown}>
     <path d={draw_svg($turtleInput)} transform={svgTransform} />
   </svg>
 </div>
