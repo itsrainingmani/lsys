@@ -3,30 +3,30 @@
   import { path } from "d3-path";
   import { turtleInput } from "./stores";
 
-  export let svgScale = 1;
+  export let svgScale;
   /** Only valid instructions are 'F', 'f', '-', '+'
    * 'F' means move forward one unit and trace the path with a line.
    * 'f' means move forward one unit but don't draw anything.
    * '-' means rotate counter-clockwise but don't move.
    * '+' means rotate clockwise but don't move.
    */
-  let svg_w = 50; // This is relative to the actual width in pixels
-  let svg_h = 50; // This is relative to the actual height in pixels
+  let svg_w = 100; // This is relative to the actual width in pixels
+  let svg_h = 100; // This is relative to the actual height in pixels
   let svgViewBox = `-${svg_w / 2} -${svg_h / 2} ${svg_w} ${svg_h}`;
 
   $: svgTransform = `scale(${svgScale})`;
-  $: svgStrokeWidth = `stroke-width: ${0.5 + 1 / (svgScale * 1.5)}%`;
+  $: svgStrokeWidth = `stroke-width: ${0.7 - (svgScale * 1.5) / 70}%`;
   const DEG_TO_RAD = Math.PI / 180;
   /**
    * SVG Layout -
    * (0,0) is at the top left corner
    * (x, y) is at bottom right
    */
-  function draw_svg(f, turn_amt = 45) {
+  function draw_svg(f, turn_amt = 45, move_amt = 4) {
     console.log(f);
     // Always center the svg context at the bottom
     // let loc = { x: svg_w / 2, y: svg_h, angle: 0 };
-    let loc = { x: 0, y: svg_h / 2, angle: 0 };
+    let loc = { x: 0, y: svg_h / 2.5, angle: 0 };
     let ctx = path();
     ctx.moveTo(loc.x, loc.y);
 
@@ -34,14 +34,14 @@
       let { x, y, angle } = loc;
       switch (t) {
         case "F":
-          loc.x = x + Math.sin(angle * DEG_TO_RAD);
-          loc.y = y - Math.cos(angle * DEG_TO_RAD);
+          loc.x = x + Math.sin(angle * DEG_TO_RAD) * move_amt;
+          loc.y = y - Math.cos(angle * DEG_TO_RAD) * move_amt;
           ctx.lineTo(loc.x, loc.y);
           ctx.moveTo(loc.x, loc.y);
           break;
         case "f":
-          loc.x = x + Math.sin(angle * DEG_TO_RAD);
-          loc.y = y - Math.cos(angle * DEG_TO_RAD);
+          loc.x = x + Math.sin(angle * DEG_TO_RAD) * move_amt;
+          loc.y = y - Math.cos(angle * DEG_TO_RAD) * move_amt;
           ctx.moveTo(loc.x, loc.y);
           break;
         case "+":
