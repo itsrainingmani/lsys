@@ -7,12 +7,10 @@
 
   let enableTransition = false;
   let formula = "";
-  const sample_svgs = [
-    [
-      "Heart",
-      "M 10,30 A 20,20 0,0,1 50,30 A 20,20 0,0,1 90,30 Q 90,60 50,90 Q 10,60 10,30 z"
-    ]
-  ];
+
+  $: if (formula.length === 0) {
+    turtleInput.update(t => formula);
+  }
 
   // When the component is mounted, set enableTransition to true
   // This will trigger the animation
@@ -25,16 +23,10 @@
   let turtleScale = 1;
 
   function handleInput(event) {
-    console.log(event.inputType);
-    console.log(event.data);
-
-    switch (event.inputType) {
-      case "insertText":
-        turtleInput.update(t => t + event.data);
-        break;
-      case "deleteContentBackward":
-        turtleInput.update(t => t.slice(0, -1));
-        break;
+    // When the Enter key is pressed, update the store
+    if (event.keyCode === 13) {
+      console.log(formula);
+      turtleInput.update(t => formula);
     }
   }
 </script>
@@ -95,7 +87,8 @@
         focus:outline-0 border border-transparent placeholder-gray-600
         rounded-lg py-2 px-4 block w-full appearance-none leading-normal
         ds-input text-center"
-        on:input={handleInput}
+        on:keypress={handleInput}
+        bind:value={formula}
         aria-label="Turtle" />
       <Turtle svgScale={turtleScale} />
       <input
