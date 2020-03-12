@@ -4,6 +4,7 @@
   import { turtleInput } from "./stores";
 
   export let svgScale;
+  export let iterations = 1;
   /** Only valid instructions are 'F', 'f', '-', '+'
    * 'F' means move forward one unit and trace the path with a line.
    * 'f' means move forward one unit but don't draw anything.
@@ -22,6 +23,34 @@
   $: svgTransform = `scale(${svgScale}) translate(${svgMoveX} ${svgMoveY})`;
   $: svgStrokeWidth = `stroke-width: ${0.7 - (svgScale * 1.5) / 70}%`;
   const DEG_TO_RAD = Math.PI / 180;
+
+  let turtleFormula = "";
+  turtleInput.subscribe(value => {
+    turtleFormula = transformSequence(value);
+    console.log(turtleFormula);
+  });
+
+  function transformSequence(seq) {
+    seq = seq.trim().split(",");
+    if (seq.length === 0) {
+      return "";
+    } else if (seq.length === 1) {
+      return seq[0];
+    }
+    let cmds = seq.shift();
+    let rules = {};
+    for (const rule of seq) {
+      let r = rule.split(":");
+      rules[r[0]] = r[1];
+    }
+    let transformed = "";
+    for (let i = 0; i < cmds.length; i++) {
+      transformed += rules[cmds[i]];
+    }
+
+    return transformed;
+  }
+
   /**
    * SVG Layout -
    * (0,0) is at the top left corner
