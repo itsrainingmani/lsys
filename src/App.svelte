@@ -83,6 +83,7 @@
       <input
         title="Turtle Formula Input"
         type="text"
+        placeholder="Turtle Formula:"
         class="transition-colors duration-100 ease-in-out bg-white shadow-lg
         focus:outline-0 border border-transparent placeholder-gray-600
         rounded-lg py-2 px-4 block w-full appearance-none leading-normal
