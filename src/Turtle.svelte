@@ -26,7 +26,7 @@
     console.log(f);
     // Always center the svg context at the bottom
     // let loc = { x: svg_w / 2, y: svg_h, angle: 0 };
-    let loc = { x: 0, y: svg_h / 2.5, angle: 0 };
+    let loc = { x: 0, y: 0, angle: 0 };
     let ctx = path();
     ctx.moveTo(loc.x, loc.y);
 
