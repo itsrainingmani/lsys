@@ -17,8 +17,8 @@
 
   let startMoveX = 0;
   let startMoveY = 0;
-  let svgMoveX = 0;
-  let svgMoveY = 0;
+  let svgMoveX = 0; // translation x-axis offset
+  let svgMoveY = 0; // translation y-axis offset
 
   $: svgTransform = `scale(${svgScale}) translate(${svgMoveX} ${svgMoveY})`;
   $: svgStrokeWidth = `stroke-width: ${0.7 - (svgScale * 1.5) / 70}%`;
@@ -30,6 +30,8 @@
     console.log(turtleFormula);
   });
 
+  // The input sequence has the following format:
+  // formula,rule1:output1,rule2:output2,...,ruleN:outputN
   function transformSequence(seq) {
     seq = seq.trim().split(",");
     if (seq.length === 0) {
@@ -37,13 +39,18 @@
     } else if (seq.length === 1) {
       return seq[0];
     }
-    let cmds = seq.shift();
+    let cmds = seq.shift(); // these are the basic cmds
     let rules = {};
+
+    // Create a mapping of rules to their outputs
+    // There can't be more than one output for a rule
     for (const rule of seq) {
       let r = rule.split(":");
       rules[r[0]] = r[1];
     }
     let transformed = "";
+
+    // Apply transformation
     for (let i = 0; i < cmds.length; i++) {
       transformed += rules[cmds[i]];
     }
@@ -58,6 +65,7 @@
    */
   function draw_svg(f, turn_amt = 45, move_amt = 4) {
     if (f.length === 0) {
+      // Reset the svg translation offsets
       svgMoveX = 0;
       svgMoveY = 0;
     }
