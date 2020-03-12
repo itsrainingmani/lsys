@@ -3,14 +3,17 @@
   import { fly, draw } from "svelte/transition";
   import Footer from "./Footer.svelte";
   import Turtle from "./Turtle.svelte";
-  import { turtleInput } from "./stores";
+  import { turtleInput, turtleIter } from "./stores";
 
   let enableTransition = false;
   let formula = "";
+  let iters = 1;
 
   $: if (formula.length === 0) {
     turtleInput.update(t => formula);
   }
+
+  $: turtleIter.update(t => iters);
 
   // When the component is mounted, set enableTransition to true
   // This will trigger the animation
@@ -25,7 +28,6 @@
   function handleInput(event) {
     // When the Enter key is pressed, update the store
     if (event.keyCode === 13) {
-      console.log(formula);
       turtleInput.update(t => formula);
     }
   }
@@ -111,6 +113,7 @@
           focus:outline-0 border border-transparent placeholder-gray-600
           rounded-md py-2 px-2 block w-1/6 appearance-none leading-tight
           ds-input text-center"
+          bind:value={iters}
           aria-label="Formula Iterations" />
       </div>
       <Turtle svgScale={turtleScale} />
