@@ -1,8 +1,11 @@
 <script>
   import { fly, fade } from "svelte/transition";
   import { quintOut } from "svelte/easing";
+  import { svgStrokeColor, turnAngle } from "./stores.js";
 
   let visible = false;
+
+  let angles = [15, 30, 45, 60, 90];
 </script>
 
 <style>
@@ -49,9 +52,33 @@
       on:click={() => (visible = false)}>
       &times;
     </a>
-    <p>Item 1</p>
-    <p>Item 2</p>
-    <p>Item 3</p>
+    <div class="flex flex-row justify-center self-center my-4">
+      <label for="stroke-color" class="text-gray-800 px-2">Stroke Color</label>
+      <input
+        name="stroke-color"
+        title="Stroke Color Picker"
+        type="color"
+        class="transition-colors duration-100 ease-in-out bg-white shadow-md
+        focus:outline-0 border border-transparent rounded-md py-2 px-2 block
+        w-2/6 appearance-none leading-tight ds-input text-center self-center"
+        bind:value={$svgStrokeColor}
+        aria-label="Stroke Color Picker" />
+    </div>
+    <div class="flex flex-row justify-center items-center self-center my-4">
+      <label for="angle-selector" class="text-gray-800 px-2">Turn Angle</label>
+      <select
+        name="angle-selector"
+        title="Angle Selector"
+        class="transition-colors duration-100 ease-in-out bg-white shadow-md
+        focus:outline-0 border border-transparent rounded-md block w-2/6
+        appearance-none leading-tight ds-input text-center self-center"
+        bind:value={$turnAngle}
+        aria-label="Angle Select">
+        {#each angles as angle}
+          <option value={angle}>{angle}</option>
+        {/each}
+      </select>
+    </div>
   </div>
 {/if}
 
