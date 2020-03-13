@@ -2,7 +2,7 @@
   footer {
     text-align: center;
     font-family: "Rubik", sans-serif;
-    font-size: x-small;
+    font-size: small;
   }
 </style>
 
