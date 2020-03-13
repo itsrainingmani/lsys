@@ -10,8 +10,8 @@
    * '-' means rotate counter-clockwise but don't move.
    * '+' means rotate clockwise but don't move.
    */
-  let svg_w = 50; // This is relative to the actual width in pixels
-  let svg_h = 50; // This is relative to the actual height in pixels
+  let svg_w = 40; // This is relative to the actual width in pixels
+  let svg_h = 40; // This is relative to the actual height in pixels
   let svgViewBox = `-${svg_w / 2} -${svg_h / 2} ${svg_w} ${svg_h}`;
 
   let startMoveX = 0;
@@ -32,7 +32,7 @@
   });
 
   $: svgTransform = `scale(${svgScale}) translate(${svgMoveX} ${svgMoveY})`;
-  $: svgStrokeWidth = `stroke-width: ${0.5 + 1 / (svgScale * 1.5)}%`;
+  $: svgStrokeWidth = `stroke-width: ${0.5 + svgScale / 5}%`;
 
   $: turtleFormula = transformSequence(inputFormula, numIters);
 
@@ -58,9 +58,14 @@
     let new_cmds = cmds;
 
     for (let i = 0; i < iters; i++) {
+      console.log(new_cmds);
       // Apply transformation
       for (let j = 0; j < new_cmds.length; j++) {
-        transformed += rules[new_cmds[j]];
+        if (rules[new_cmds[j]]) {
+          transformed += rules[new_cmds[j]];
+        } else {
+          transformed += new_cmds[j];
+        }
       }
       new_cmds = transformed;
       transformed = "";
@@ -69,11 +74,6 @@
     return new_cmds;
   }
 
-  /**
-   * SVG Layout -
-   * (0,0) is at the top left corner
-   * (x, y) is at bottom right
-   */
   function draw_svg(f, turn_amt = 45, move_amt = 2) {
     if (f.length === 0) {
       // Reset the svg translation offsets
@@ -108,6 +108,7 @@
           break;
       }
     });
+    ctx.closePath();
 
     return ctx.toString();
   }
@@ -122,8 +123,8 @@
   }
 
   function handleMouseUp(e) {
-    svgMoveX = (e.offsetX - startMoveX) / (5 * svgScale);
-    svgMoveY = (e.offsetY - startMoveY) / (5 * svgScale);
+    svgMoveX = (e.offsetX - startMoveX) / (10 * svgScale);
+    svgMoveY = (e.offsetY - startMoveY) / (10 * svgScale);
   }
 </script>
 
