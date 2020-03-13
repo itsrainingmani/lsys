@@ -10,8 +10,8 @@
    * '-' means rotate counter-clockwise but don't move.
    * '+' means rotate clockwise but don't move.
    */
-  let svg_w = 100; // This is relative to the actual width in pixels
-  let svg_h = 100; // This is relative to the actual height in pixels
+  let svg_w = 50; // This is relative to the actual width in pixels
+  let svg_h = 50; // This is relative to the actual height in pixels
   let svgViewBox = `-${svg_w / 2} -${svg_h / 2} ${svg_w} ${svg_h}`;
 
   let startMoveX = 0;
@@ -19,23 +19,26 @@
   let svgMoveX = 0; // translation x-axis offset
   let svgMoveY = 0; // translation y-axis offset
 
-  $: svgTransform = `scale(${svgScale}) translate(${svgMoveX} ${svgMoveY})`;
-  $: svgStrokeWidth = `stroke-width: ${0.7 - (svgScale * 1.5) / 70}%`;
   const DEG_TO_RAD = Math.PI / 180;
 
-  let turtleFormula = "";
+  let inputFormula = "";
+  let numIters = 1;
   turtleInput.subscribe(value => {
-    turtleFormula = transformSequence(value);
-    console.log(turtleFormula);
+    inputFormula = value;
   });
 
   turtleIter.subscribe(value => {
-    console.log(value);
+    numIters = value;
   });
+
+  $: svgTransform = `scale(${svgScale}) translate(${svgMoveX} ${svgMoveY})`;
+  $: svgStrokeWidth = `stroke-width: ${0.5 + 1 / (svgScale * 1.5)}%`;
+
+  $: turtleFormula = transformSequence(inputFormula, numIters);
 
   // The input sequence has the following format:
   // formula,rule1:output1,rule2:output2,...,ruleN:outputN
-  function transformSequence(seq) {
+  function transformSequence(seq, iters) {
     seq = seq.trim().split(",");
     if (seq.length === 0) {
       return "";
@@ -52,13 +55,18 @@
       rules[r[0]] = r[1];
     }
     let transformed = "";
+    let new_cmds = cmds;
 
-    // Apply transformation
-    for (let i = 0; i < cmds.length; i++) {
-      transformed += rules[cmds[i]];
+    for (let i = 0; i < iters; i++) {
+      // Apply transformation
+      for (let j = 0; j < new_cmds.length; j++) {
+        transformed += rules[new_cmds[j]];
+      }
+      new_cmds = transformed;
+      transformed = "";
     }
 
-    return transformed;
+    return new_cmds;
   }
 
   /**
@@ -66,7 +74,7 @@
    * (0,0) is at the top left corner
    * (x, y) is at bottom right
    */
-  function draw_svg(f, turn_amt = 45, move_amt = 4) {
+  function draw_svg(f, turn_amt = 45, move_amt = 2) {
     if (f.length === 0) {
       // Reset the svg translation offsets
       svgMoveX = 0;
