@@ -17,7 +17,7 @@
     top: 0;
     right: 0;
     overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 60px; /* Place content 60px from the top */
+    padding-top: 40px; /* Place content 60px from the top */
   }
 
   @media (max-width: 640px) {
@@ -46,6 +46,7 @@
     transition:fly={{ delay: 250, duration: 300, easing: quintOut, x: 250 }}
     id="sidepanel"
     class="sidepanel fixed shadow">
+    <p class="text-gray-800 text-center my-2">Options</p>
     <a
       href="javascript:void(0)"
       class="closebtn"
