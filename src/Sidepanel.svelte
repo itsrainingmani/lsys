@@ -17,6 +17,12 @@
     padding-top: 60px; /* Place content 60px from the top */
   }
 
+  @media (max-width: 640px) {
+    .sidepanel {
+      width: 100%;
+    }
+  }
+
   .sidepanel .closebtn {
     position: absolute;
     top: 0;
