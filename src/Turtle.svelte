@@ -1,7 +1,7 @@
 <script>
   import { fly } from "svelte/transition";
   import { path } from "d3-path";
-  import { turtleInput, turtleIter } from "./stores";
+  import { turtleInput, turtleIter, svgStrokeColor, turnAngle } from "./stores";
 
   export let svgScale;
   /** Only valid instructions are 'F', 'f', '-', '+'
@@ -139,7 +139,6 @@
   }
 
   path {
-    stroke: #ff3e00;
     fill: none;
   }
 </style>
@@ -155,6 +154,9 @@
     style={svgStrokeWidth}
     on:mouseup={handleMouseUp}
     on:mousedown={handleMouseDown}>
-    <path d={draw_svg(turtleFormula)} transform={svgTransform} />
+    <path
+      d={draw_svg(turtleFormula, $turnAngle)}
+      transform={svgTransform}
+      stroke={$svgStrokeColor} />
   </svg>
 </div>
