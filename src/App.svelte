@@ -3,6 +3,7 @@
   import { fly, draw } from "svelte/transition";
   import Footer from "./Footer.svelte";
   import Turtle from "./Turtle.svelte";
+  import Sidepanel from "./Sidepanel.svelte";
   import { turtleInput, turtleIter } from "./stores";
 
   let enableTransition = false;
@@ -88,6 +89,7 @@
 </style>
 
 <main class="flex-grow self-center">
+  <Sidepanel />
   <h1 class="py-2">L systems</h1>
   {#if enableTransition}
     <div transition:fly={{ y: -50, duration: 500 }}>
