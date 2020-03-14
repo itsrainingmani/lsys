@@ -111,7 +111,7 @@
           title="Formula Iterations"
           type="number"
           min="1"
-          max="5"
+          max="7"
           class="transition-colors duration-100 ease-in-out bg-white shadow-md
           focus:outline-0 border border-transparent placeholder-gray-600
           rounded-md py-2 px-2 block w-1/6 appearance-none leading-tight
@@ -123,9 +123,9 @@
       <input
         title="Turtle SVG Scaler"
         type="range"
-        min="0.1"
-        max="1"
-        step="0.1"
+        min="1"
+        max="20"
+        step="1"
         bind:value={turtleScale} />
     </div>
   {/if}
