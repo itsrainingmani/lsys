@@ -1,7 +1,13 @@
 <script>
   import { fly } from "svelte/transition";
   import { path } from "d3-path";
-  import { turtleInput, turtleIter, svgStrokeColor, turnAngle } from "./stores";
+  import {
+    turtleInput,
+    turtleIter,
+    svgStrokeColor,
+    turnAngle,
+    svgStrokeWidth
+  } from "./stores";
 
   export let svgScale;
   /** Only valid instructions are 'F', 'f', '-', '+'
@@ -31,9 +37,6 @@
     numIters = value;
   });
 
-  // $: svgTransform = `scale(${svgScale}) translate(${svgMoveX} ${svgMoveY})`;
-
-  let svgStrokeWidth = `stroke-width: ${0.5}%`;
   $: turtleFormula = transformSequence(inputFormula, numIters);
 
   // The input sequence has the following format:
@@ -157,8 +160,11 @@
   bg-white shadow-md focus:outline-0 border border-transparent
   placeholder-gray-600 rounded-md block w-full appearance-none leading-tight
   my-2">
-  <svg viewBox={svgViewBox} style={svgStrokeWidth}>
-    <path d={draw_svg(turtleFormula, $turnAngle)} stroke={$svgStrokeColor} />
+  <svg viewBox={svgViewBox}>
+    <path
+      d={draw_svg(turtleFormula, $turnAngle)}
+      stroke={$svgStrokeColor}
+      stroke-width={$svgStrokeWidth} />
   </svg>
 </div>
 <div
