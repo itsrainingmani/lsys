@@ -86,14 +86,12 @@
 
     f.split("").forEach(t => {
       let { x, y, angle } = loc;
-      if (t === "F") {
+      if ("ABCDEFGHIJabcdefghij".includes(t)) {
         loc.x = x + Math.sin(angle * DEG_TO_RAD) * move_amt;
         loc.y = y - Math.cos(angle * DEG_TO_RAD) * move_amt;
-        ctx.lineTo(loc.x, loc.y);
-        ctx.moveTo(loc.x, loc.y);
-      } else if (t === "f") {
-        loc.x = x + Math.sin(angle * DEG_TO_RAD) * move_amt;
-        loc.y = y - Math.cos(angle * DEG_TO_RAD) * move_amt;
+        if ("ABCDEFGHIJ".includes(t)) {
+          ctx.lineTo(loc.x, loc.y);
+        }
         ctx.moveTo(loc.x, loc.y);
       } else if (t === "+") {
         loc.angle = (angle + turn_amt) % 360;
