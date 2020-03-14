@@ -16,8 +16,8 @@
    * '-' means rotate counter-clockwise but don't move.
    * '+' means rotate clockwise but don't move.
    */
-  let svg_w = 40; // This is relative to the actual width in pixels
-  let svg_h = 40; // This is relative to the actual height in pixels
+  let svg_w = 40 * svgScale; // This is relative to the actual width in pixels
+  let svg_h = 40 * svgScale; // This is relative to the actual height in pixels
 
   $: svg_w = 40 * svgScale;
   $: svg_h = 40 * svgScale;
