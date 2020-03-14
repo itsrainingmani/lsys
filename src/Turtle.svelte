@@ -12,12 +12,12 @@
    */
   let svg_w = 40; // This is relative to the actual width in pixels
   let svg_h = 40; // This is relative to the actual height in pixels
-  let svgViewBox = `-${svg_w / 2} -${svg_h / 2} ${svg_w} ${svg_h}`;
 
-  let startMoveX = 0;
-  let startMoveY = 0;
-  let svgMoveX = 0; // translation x-axis offset
-  let svgMoveY = 0; // translation y-axis offset
+  $: svg_w = 40 * svgScale;
+  $: svg_h = 40 * svgScale;
+  $: originX = (-1 * svg_w) / 2;
+  $: originY = (-1 * svg_h) / 2;
+  $: svgViewBox = `${originX} ${originY} ${svg_w} ${svg_h}`;
 
   const DEG_TO_RAD = Math.PI / 180;
 
@@ -31,9 +31,9 @@
     numIters = value;
   });
 
-  $: svgTransform = `scale(${svgScale}) translate(${svgMoveX} ${svgMoveY})`;
-  $: svgStrokeWidth = `stroke-width: ${0.5 + svgScale / 5}%`;
+  // $: svgTransform = `scale(${svgScale}) translate(${svgMoveX} ${svgMoveY})`;
 
+  let svgStrokeWidth = `stroke-width: ${0.5}%`;
   $: turtleFormula = transformSequence(inputFormula, numIters);
 
   // The input sequence has the following format:
@@ -75,11 +75,6 @@
   }
 
   function draw_svg(f, turn_amt = 45, move_amt = 2) {
-    if (f.length === 0) {
-      // Reset the svg translation offsets
-      svgMoveX = 0;
-      svgMoveY = 0;
-    }
     // Always center the svg context at the bottom
     // let loc = { x: svg_w / 2, y: svg_h, angle: 0 };
     let loc = { x: 0, y: 0, angle: 0 };
@@ -113,24 +108,37 @@
     return ctx.toString();
   }
 
-  // function handleMouseMove(e) {
-  //   console.log(e.offsetX, e.offsetY);
-  // }
-
-  function handleMouseDown(e) {
-    startMoveX = e.offsetX;
-    startMoveY = e.offsetY;
+  function panViewportLeft(e) {
+    originX += 2 * svgScale;
   }
 
-  function handleMouseUp(e) {
-    svgMoveX = (e.offsetX - startMoveX) / (10 * svgScale);
-    svgMoveY = (e.offsetY - startMoveY) / (10 * svgScale);
+  function panViewportRight(e) {
+    originX -= 2 * svgScale;
   }
+
+  function panViewportUp(e) {
+    originY += 2 * svgScale;
+  }
+
+  function panViewportDown(e) {
+    originY -= 2 * svgScale;
+  }
+
+  // svgScale * svg width gives the current width of the viewport
+  // svgScale * svg height gives the current height of the viewport
+  // event.srcElement.clientHeight gets the height of the parent div
+  // event.srcElement.clientWidth gets the width of the parent div
+  // the mouse events are in terms of the parent div and not the svg viewport
 </script>
 
 <style>
   svg {
     stroke-opacity: 90%;
+    overflow: scroll;
+  }
+
+  div {
+    overflow: scroll;
   }
 
   .svg-box {
@@ -149,14 +157,31 @@
   bg-white shadow-md focus:outline-0 border border-transparent
   placeholder-gray-600 rounded-md block w-full appearance-none leading-tight
   my-2">
-  <svg
-    viewBox={svgViewBox}
-    style={svgStrokeWidth}
-    on:mouseup={handleMouseUp}
-    on:mousedown={handleMouseDown}>
-    <path
-      d={draw_svg(turtleFormula, $turnAngle)}
-      transform={svgTransform}
-      stroke={$svgStrokeColor} />
+  <svg viewBox={svgViewBox} style={svgStrokeWidth}>
+    <path d={draw_svg(turtleFormula, $turnAngle)} stroke={$svgStrokeColor} />
   </svg>
+</div>
+<div
+  class="inline-flex transition-colors duration-100 ease-in-out bg-white shadow
+  rounded appearance-none leading-tight">
+  <button
+    on:click={panViewportLeft}
+    class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-l">
+    ←
+  </button>
+  <button
+    on:click={panViewportUp}
+    class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-none">
+    ↑
+  </button>
+  <button
+    on:click={panViewportRight}
+    class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-none">
+    →
+  </button>
+  <button
+    on:click={panViewportDown}
+    class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-r">
+    ↓
+  </button>
 </div>
