@@ -123,9 +123,9 @@
       <input
         title="Turtle SVG Scaler"
         type="range"
-        min="1"
-        max="20"
-        step="1"
+        min="0.01"
+        max="10"
+        step="0.05"
         bind:value={turtleScale} />
     </div>
   {/if}
