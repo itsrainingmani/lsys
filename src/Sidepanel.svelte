@@ -1,7 +1,7 @@
 <script>
   import { fly, fade } from "svelte/transition";
   import { quintOut } from "svelte/easing";
-  import { svgStrokeColor, turnAngle } from "./stores.js";
+  import { svgStrokeColor, turnAngle, svgStrokeWidth } from "./stores.js";
 
   let visible = false;
 
@@ -85,6 +85,23 @@
             <option value={angle}>{angle}</option>
           {/each}
         </select>
+      </div>
+      <div class="flex justify-between my-2">
+        <label for="stroke-width" class="text-gray-800 px-2">
+          Stroke Width
+        </label>
+        <input
+          name="stroke-width"
+          title="Stroke Width"
+          type="number"
+          min="0.1"
+          max="1"
+          step="0.1"
+          class="transition-colors duration-100 ease-in-out bg-white shadow-md
+          focus:outline-0 border border-transparent rounded-md px-2 block w-2/6
+          appearance-none leading-tight ds-input text-center self-center mr-2"
+          bind:value={$svgStrokeWidth}
+          aria-label="Stroke Width Picker" />
       </div>
     </div>
   </div>
