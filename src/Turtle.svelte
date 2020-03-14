@@ -78,32 +78,34 @@
   }
 
   function draw_svg(f, turn_amt = 45, move_amt = 2) {
-    // Always center the svg context at the bottom
-    // let loc = { x: svg_w / 2, y: svg_h, angle: 0 };
+    let saved_states = [];
     let loc = { x: 0, y: 0, angle: 0 };
     let ctx = path();
     ctx.moveTo(loc.x, loc.y);
 
     f.split("").forEach(t => {
       let { x, y, angle } = loc;
-      switch (t) {
-        case "F":
-          loc.x = x + Math.sin(angle * DEG_TO_RAD) * move_amt;
-          loc.y = y - Math.cos(angle * DEG_TO_RAD) * move_amt;
-          ctx.lineTo(loc.x, loc.y);
-          ctx.moveTo(loc.x, loc.y);
-          break;
-        case "f":
-          loc.x = x + Math.sin(angle * DEG_TO_RAD) * move_amt;
-          loc.y = y - Math.cos(angle * DEG_TO_RAD) * move_amt;
-          ctx.moveTo(loc.x, loc.y);
-          break;
-        case "+":
-          loc.angle = (angle + turn_amt) % 360;
-          break;
-        case "-":
-          loc.angle = (angle - turn_amt) % 360;
-          break;
+      if (t === "F") {
+        loc.x = x + Math.sin(angle * DEG_TO_RAD) * move_amt;
+        loc.y = y - Math.cos(angle * DEG_TO_RAD) * move_amt;
+        ctx.lineTo(loc.x, loc.y);
+        ctx.moveTo(loc.x, loc.y);
+      } else if (t === "f") {
+        loc.x = x + Math.sin(angle * DEG_TO_RAD) * move_amt;
+        loc.y = y - Math.cos(angle * DEG_TO_RAD) * move_amt;
+        ctx.moveTo(loc.x, loc.y);
+      } else if (t === "+") {
+        loc.angle = (angle + turn_amt) % 360;
+      } else if (t === "-") {
+        loc.angle = (angle - turn_amt) % 360;
+      } else if (t === "[") {
+        saved_states.push({ x: x, y: y, angle: angle });
+      } else if (t === "]") {
+        let prev = saved_states.pop();
+        loc.x = prev.x;
+        loc.y = prev.y;
+        loc.angle = prev.angle;
+        ctx.moveTo(loc.x, loc.y);
       }
     });
     ctx.closePath();
