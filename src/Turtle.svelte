@@ -18,12 +18,13 @@
    */
   let svg_w = 40 * svgScale; // This is relative to the actual width in pixels
   let svg_h = 40 * svgScale; // This is relative to the actual height in pixels
+  let originX = 0;
+  let originY = 0;
 
   $: svg_w = 40 * svgScale;
   $: svg_h = 40 * svgScale;
-  $: originX = (-1 * svg_w) / 2;
-  $: originY = (-1 * svg_h) / 2;
-  $: svgViewBox = `${originX} ${originY} ${svg_w} ${svg_h}`;
+  $: svgViewBox = `${(-1 * svg_w) / 2 + originX} ${(-1 * svg_h) / 2 +
+    originY} ${svg_w} ${svg_h}`;
 
   const DEG_TO_RAD = Math.PI / 180;
 
