@@ -218,21 +218,25 @@
   class="inline-flex transition-colors duration-100 ease-in-out bg-white shadow
   rounded appearance-none leading-tight">
   <button
+    title="Pan Left"
     on:click={panViewportLeft}
     class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-l">
     ←
   </button>
   <button
+    title="Pan Up"
     on:click={panViewportUp}
     class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-none">
     ↑
   </button>
   <button
+    title="Pan Right"
     on:click={panViewportRight}
     class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-none">
     →
   </button>
   <button
+    title="Pan Down"
     on:click={panViewportDown}
     class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-r">
     ↓
@@ -242,11 +246,13 @@
   class="inline-flex transition-colors duration-100 ease-in-out bg-white shadow
   rounded appearance-none leading-tight ml-4 my-1">
   <button
+    title="Share Fractal"
     on:click={shareState}
     class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-l">
     🔗
   </button>
   <button
+    title="Clear Fractal"
     on:click={clearState}
     class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-r">
     ✖️
