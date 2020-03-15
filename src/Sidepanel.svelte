@@ -35,7 +35,7 @@
   }
 
   button {
-    position: absolute;
+    position: fixed;
     top: 5px;
     right: 5px;
   }
