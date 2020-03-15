@@ -12,6 +12,7 @@
   export let svgScale;
   export let originX = 0;
   export let originY = 0;
+  let snackbarVis = false;
   /** Only valid instructions are 'F', 'f', '-', '+'
    * 'F' means move forward one unit and trace the path with a line.
    * 'f' means move forward one unit but don't draw anything.
@@ -147,6 +148,10 @@
       navigator.clipboard
         .writeText(location.origin + "/" + shareable)
         .then(() => {
+          snackbarVis = true;
+          setTimeout(() => {
+            snackbarVis = false;
+          }, 1500);
           console.log("Shared to clipboard");
         })
         .catch(err => {
@@ -183,6 +188,16 @@
 
   path {
     fill: none;
+  }
+
+  .snackbar {
+    min-width: 250px; /* Set a default minimum width */
+    margin-left: -125px; /* Divide value of min-width by 2 */
+    text-align: center; /* Centered text */
+    position: fixed; /* Sit on top of the screen */
+    z-index: 1; /* Add a z-index if needed */
+    left: 50%; /* Center the snackbar */
+    bottom: 30px; /* 30px from the bottom */
   }
 </style>
 
@@ -223,17 +238,25 @@
     ↓
   </button>
 </div>
-<button
-  on:click={shareState}
-  class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded
-  transition-colors duration-100 ease-in-out bg-white shadow appearance-none
-  leading-tight">
-  Share
-</button>
-<button
-  on:click={clearState}
-  class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded
-  transition-colors duration-100 ease-in-out bg-white shadow appearance-none
-  leading-tight">
-  Reset
-</button>
+<div
+  class="inline-flex transition-colors duration-100 ease-in-out bg-white shadow
+  rounded appearance-none leading-tight ml-4 my-1">
+  <button
+    on:click={shareState}
+    class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-l">
+    🔗
+  </button>
+  <button
+    on:click={clearState}
+    class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-r">
+    ✖️
+  </button>
+</div>
+{#if snackbarVis}
+  <div
+    transition:fly={{ y: 200, duration: 400 }}
+    class="snackbar transition-colors bg-gray-600 shadow-md focus:outline-0
+    border border-transparent rounded-md px-2 py-2 appearance-none leading-tight">
+    <p class="white">Copied to Clipboard!</p>
+  </div>
+{/if}
