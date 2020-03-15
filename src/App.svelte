@@ -15,6 +15,9 @@
   let enableTransition = false;
   let formula = "";
   let iters = 1;
+  let turtleScale = 1;
+  let turtleOriginX = 0;
+  let turtleOriginY = 0;
 
   $: if (formula.length === 0) {
     turtleInput.update(t => formula);
@@ -37,14 +40,15 @@
       $turnAngle = parseInt(stateParams[2]);
       $svgStrokeColor = stateParams[3];
       $svgStrokeWidth = parseFloat(stateParams[4]);
+      turtleScale = parseFloat(stateParams[5]);
+      turtleOriginX = parseFloat(stateParams[6]);
+      turtleOriginY = parseFloat(stateParams[7]);
     }
 
     setTimeout(() => {
       enableTransition = true;
     }, 1000);
   });
-
-  let turtleScale = 1;
 
   function handleInput(event) {
     // When the Enter key is pressed, update the store
@@ -139,7 +143,10 @@
           bind:value={iters}
           aria-label="Formula Iterations" />
       </div>
-      <Turtle svgScale={turtleScale} />
+      <Turtle
+        svgScale={turtleScale}
+        originX={turtleOriginX}
+        originY={turtleOriginY} />
       <input
         title="Turtle SVG Scaler"
         type="range"
