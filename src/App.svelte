@@ -4,7 +4,13 @@
   import Footer from "./Footer.svelte";
   import Turtle from "./Turtle.svelte";
   import Sidepanel from "./Sidepanel.svelte";
-  import { turtleInput, turtleIter } from "./stores";
+  import {
+    turtleInput,
+    turtleIter,
+    svgStrokeColor,
+    svgStrokeWidth,
+    turnAngle
+  } from "./stores";
 
   let enableTransition = false;
   let formula = "";
@@ -19,6 +25,20 @@
   // When the component is mounted, set enableTransition to true
   // This will trigger the animation
   onMount(() => {
+    if (location.hash.length > 1) {
+      let stateParams = window.atob(location.hash.slice(1)).split("|"); //base64 decode
+
+      // Set the state
+      console.log(stateParams);
+      $turtleInput = stateParams[0];
+      formula = stateParams[0];
+      $turtleIter = parseInt(stateParams[1]);
+      iters = parseInt(stateParams[1]);
+      $turnAngle = parseInt(stateParams[2]);
+      $svgStrokeColor = stateParams[3];
+      $svgStrokeWidth = parseFloat(stateParams[4]);
+    }
+
     setTimeout(() => {
       enableTransition = true;
     }, 1000);
