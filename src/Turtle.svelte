@@ -63,7 +63,6 @@
     let new_cmds = cmds;
 
     for (let i = 0; i < iters; i++) {
-      console.log(new_cmds);
       // Apply transformation
       for (let j = 0; j < new_cmds.length; j++) {
         if (rules[new_cmds[j]]) {
@@ -152,7 +151,6 @@
           setTimeout(() => {
             snackbarVis = false;
           }, 1500);
-          console.log("Shared to clipboard");
         })
         .catch(err => {
           console.log(err);
