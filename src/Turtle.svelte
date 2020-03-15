@@ -145,7 +145,7 @@
       return;
     } else {
       navigator.clipboard
-        .writeText("https://fractals.now.sh/" + shareable)
+        .writeText(location.origin + "/" + shareable)
         .then(() => {
           console.log("Shared to clipboard");
         })
