@@ -13,6 +13,7 @@
   export let originX = 0;
   export let originY = 0;
   let snackbarVis = false;
+  let snackMsg = "Copied to Clipboard!";
   /** Only valid instructions are 'F', 'f', '-', '+'
    * 'F' means move forward one unit and trace the path with a line.
    * 'f' means move forward one unit but don't draw anything.
@@ -142,6 +143,11 @@
     const shareable = "#" + window.btoa(stateParams);
     location.hash = shareable;
     if (!navigator.clipboard) {
+      snackMsg = "URL Updated!";
+      snackbarVis = true;
+      setTimeout(() => {
+        snackbarVis = false;
+      }, 1500);
       return;
     } else {
       navigator.clipboard
@@ -261,6 +267,6 @@
     transition:fly={{ y: 200, duration: 400 }}
     class="snackbar transition-colors bg-gray-600 shadow-md focus:outline-0
     border border-transparent rounded-md px-2 py-2 appearance-none leading-tight">
-    <p class="white">Copied to Clipboard!</p>
+    <p class="white">{snackMsg}</p>
   </div>
 {/if}
