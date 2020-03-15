@@ -128,6 +128,21 @@
     originY -= 2 * svgScale;
   }
 
+  function shareState() {
+    const stateParams = [
+      $turtleInput,
+      $turtleIter,
+      $turnAngle,
+      $svgStrokeColor,
+      $svgStrokeWidth
+    ].join("|");
+    console.log(window.btoa(stateParams));
+  }
+
+  function clearState() {
+    location.assign("/");
+  }
+
   // svgScale * svg width gives the current width of the viewport
   // svgScale * svg height gives the current height of the viewport
   // event.srcElement.clientHeight gets the height of the parent div
@@ -192,3 +207,17 @@
     ↓
   </button>
 </div>
+<button
+  on:click={shareState}
+  class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded
+  transition-colors duration-100 ease-in-out bg-white shadow appearance-none
+  leading-tight">
+  Share
+</button>
+<button
+  on:click={clearState}
+  class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded
+  transition-colors duration-100 ease-in-out bg-white shadow appearance-none
+  leading-tight">
+  Reset
+</button>
