@@ -10,6 +10,8 @@
   } from "./stores";
 
   export let svgScale;
+  export let originX = 0;
+  export let originY = 0;
   /** Only valid instructions are 'F', 'f', '-', '+'
    * 'F' means move forward one unit and trace the path with a line.
    * 'f' means move forward one unit but don't draw anything.
@@ -18,8 +20,6 @@
    */
   let svg_w = 40 * svgScale; // This is relative to the actual width in pixels
   let svg_h = 40 * svgScale; // This is relative to the actual height in pixels
-  let originX = 0;
-  let originY = 0;
 
   $: svg_w = 40 * svgScale;
   $: svg_h = 40 * svgScale;
@@ -134,9 +134,25 @@
       $turtleIter,
       $turnAngle,
       $svgStrokeColor,
-      $svgStrokeWidth
+      $svgStrokeWidth,
+      svgScale,
+      originX,
+      originY
     ].join("|");
-    console.log(window.btoa(stateParams));
+    const shareable = "#" + window.btoa(stateParams);
+    location.hash = shareable;
+    if (!navigator.clipboard) {
+      return;
+    } else {
+      navigator.clipboard
+        .writeText("https://fractals.now.sh/" + shareable)
+        .then(() => {
+          console.log("Shared to clipboard");
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }
 
   function clearState() {
