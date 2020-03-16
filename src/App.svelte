@@ -85,7 +85,7 @@
 
     main {
       width: 80%;
-      max-width: 320px;
+      max-width: 400px;
     }
 
     #turtle-inputs {
