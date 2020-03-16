@@ -248,7 +248,7 @@
 </div>
 <div
   class="inline-flex transition-colors duration-100 ease-in-out bg-white shadow
-  rounded appearance-none leading-tight ml-4 my-1">
+  rounded appearance-none leading-tight ml-4">
   <button
     title="Share Fractal"
     on:click={shareState}
