@@ -178,12 +178,12 @@
 <style>
   svg {
     stroke-opacity: 90%;
-    overflow: scroll;
+/*     overflow: scroll; */
   }
-
+/* 
   div {
     overflow: scroll;
-  }
+  } */
 
   .svg-box {
     background-color: #f8fcff;
