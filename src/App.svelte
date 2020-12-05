@@ -28,6 +28,7 @@
   // When the component is mounted, set enableTransition to true
   // This will trigger the animation
   onMount(() => {
+    // Parse the URL to extract the state from it
     if (location.hash.length > 1) {
       let stateParams = window.atob(location.hash.slice(1)).split("|"); //base64 decode
 
