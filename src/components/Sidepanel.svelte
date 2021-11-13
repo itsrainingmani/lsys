@@ -1,7 +1,7 @@
 <script>
 	import { fly, fade } from "svelte/transition";
 	import { quintOut } from "svelte/easing";
-	import { svgStrokeColor, turnAngle, svgStrokeWidth } from "./stores.js";
+	import { svgStrokeColor, turnAngle, svgStrokeWidth } from "../stores.js";
 
 	let visible = false;
 

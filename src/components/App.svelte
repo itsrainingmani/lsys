@@ -10,7 +10,7 @@
     svgStrokeColor,
     svgStrokeWidth,
     turnAngle
-  } from "./stores";
+  } from ".../stores";
 
   let enableTransition = false;
   let formula = "";
