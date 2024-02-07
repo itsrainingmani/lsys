@@ -117,7 +117,7 @@
   <Sidepanel />
   <h1 class="py-2">L systems</h1>
   {#if enableTransition}
-    <div transition:fly={{ y: -50, duration: 500 }}>
+    <div transition:fly|global={{ y: -50, duration: 500 }}>
       <p>An Interactive Fractal Generator</p>
       <br />
       <div class="flex" id="turtle-inputs">
