@@ -206,7 +206,7 @@
 </style>
 
 <div
-  transition:fly={{ y: -50, duration: 500 }}
+  transition:fly|global={{ y: -50, duration: 500 }}
   class="svg-box items-center transition-colors duration-100 ease-in-out
   bg-white shadow-md focus:outline-0 border border-transparent
   placeholder-gray-600 rounded-md block w-full appearance-none leading-tight
@@ -264,7 +264,7 @@
 </div>
 {#if snackbarVis}
   <div
-    transition:fly={{ y: 200, duration: 400 }}
+    transition:fly|global={{ y: 200, duration: 400 }}
     class="snackbar transition-colors bg-gray-600 shadow-md focus:outline-0
     border border-transparent rounded-md px-2 py-2 appearance-none leading-tight">
     <p class="white">{snackMsg}</p>

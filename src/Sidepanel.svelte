@@ -10,7 +10,7 @@
 
 {#if visible}
 	<div
-		transition:fly={{ delay: 250, duration: 300, easing: quintOut, x: 250 }}
+		transition:fly|global={{ delay: 250, duration: 300, easing: quintOut, x: 250 }}
 		id="sidepanel"
 		class="sidepanel fixed shadow"
 	>
