@@ -1,7 +1,7 @@
-<script>
-	import { fly, fade } from "svelte/transition";
-	import { quintOut } from "svelte/easing";
-	import { svgStrokeColor, turnAngle, svgStrokeWidth } from "./stores.js";
+<script lang="ts">
+	import { fly, fade } from 'svelte/transition';
+	import { quintOut } from 'svelte/easing';
+	import { svgStrokeColor, turnAngle, svgStrokeWidth } from './stores.js';
 
 	let visible = false;
 
@@ -10,12 +10,19 @@
 
 {#if visible}
 	<div
-		transition:fly|global={{ delay: 250, duration: 300, easing: quintOut, x: 250 }}
+		transition:fly|global={{
+			delay: 250,
+			duration: 300,
+			easing: quintOut,
+			x: 250,
+		}}
 		id="sidepanel"
 		class="sidepanel fixed shadow"
 	>
 		<p class="text-gray-800 text-center my-2">Options</p>
-		<span class="closebtn" on:click={() => (visible = false)}> &times; </span>
+		<button type="button" class="closebtn" on:click={() => (visible = false)}>
+			&times;
+		</button>
 		<div class="flex flex-col">
 			<div class="flex justify-between my-2">
 				<label for="stroke-color" class="text-gray-800 px-2">

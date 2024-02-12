@@ -1,43 +1,27 @@
 {
-	"name": "lsys",
-	"version": "1.0.0",
-	"author": {
-		"name": "Manikandan Sundararajan",
-		"email": "mani@hey.com"
-	},
-	"keywords": [
-		"svelte",
-		"fractals",
-		"lsystems",
-		"interactive"
-	],
-	"description": "An Interactive Fractal Generator",
-	"repository": {
-		"url": "https://github.com/itsrainingmani/lsys.git"
-	},
-	"scripts": {
-		"build": "rollup -c",
-		"dev": "rollup -c -w",
-		"start": "sirv public"
-	},
-	"devDependencies": {
-		"@fullhuman/postcss-purgecss": "^4.0.3",
-		"@rollup/plugin-commonjs": "^21.0.1",
-		"@rollup/plugin-node-resolve": "^13.0.6",
-		"autoprefixer": "^10.4.0",
-		"postcss": "^8.3.11",
-		"postcss-import": "^14.0.2",
-		"rollup": "^2.60.0",
-		"rollup-plugin-css-only": "^3.1.0",
-		"rollup-plugin-livereload": "^2.0.5",
-		"rollup-plugin-postcss": "^4.0.1",
-		"rollup-plugin-svelte": "^7.1.5",
-		"rollup-plugin-terser": "^7.0.2",
-		"svelte": "^4.0.0",
-		"tailwindcss": "^2.2.19"
-	},
-	"dependencies": {
-		"d3-path": "^3.0.1",
-		"sirv-cli": "^1.0.14"
-	}
+  "name": "lsystems",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.json"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^3.0.2",
+    "@tsconfig/svelte": "^5.0.2",
+    "autoprefixer": "^10.4.17",
+    "postcss": "^8.4.35",
+    "svelte": "^4.2.10",
+    "svelte-check": "^3.6.3",
+    "tailwindcss": "^3.4.1",
+    "tslib": "^2.6.2",
+    "typescript": "^5.2.2",
+    "vite": "^5.1.0"
+  },
+  "dependencies": {
+    "d3-path": "^3.1.0"
+  }
 }

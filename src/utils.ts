@@ -10,9 +10,9 @@ export const typewriter = (node, { speed = 100 }) => {
 
 	return {
 		duration,
-		tick: t => {
+		tick: (t) => {
 			const i = ~~(text.length * t);
 			node.value = text.slice(0, i);
-		}
+		},
 	};
 };
