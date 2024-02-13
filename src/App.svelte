@@ -1,19 +1,17 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { fly, draw } from 'svelte/transition';
-	import Footer from './Footer.svelte';
-	import Turtle from './Turtle.svelte';
-	import Sidepanel from './Sidepanel.svelte';
+	import { onMount } from "svelte";
+	import Footer from "./Footer.svelte";
+	import Turtle from "./Turtle.svelte";
+	import Sidepanel from "./Sidepanel.svelte";
 	import {
 		turtleInput,
 		turtleIter,
 		svgStrokeColor,
 		svgStrokeWidth,
 		turnAngle,
-	} from './stores';
+	} from "./stores";
 
-	let enableTransition = false;
-	let formula = '';
+	let formula = "";
 	let iters = 1;
 	let turtleScale = 1;
 	let turtleOriginX = 0;
@@ -30,7 +28,7 @@
 	onMount(() => {
 		// Parse the URL to extract the state from it
 		if (location.hash.length > 1) {
-			let stateParams = window.atob(location.hash.slice(1)).split('|'); //base64 decode
+			let stateParams = window.atob(location.hash.slice(1)).split("|"); //base64 decode
 
 			// Set the state
 			console.log(stateParams);
@@ -45,16 +43,18 @@
 			turtleOriginX = parseFloat(stateParams[6]);
 			turtleOriginY = parseFloat(stateParams[7]);
 		}
-
-		setTimeout(() => {
-			enableTransition = true;
-		}, 1000);
 	});
 
-	function handleInput(event) {
+	function handleInput(event: KeyboardEvent) {
 		// When the Enter key is pressed, update the store
-		if (event.keyCode === 13) {
-			turtleInput.update((t) => formula);
+		if (event.defaultPrevented) {
+			return;
+		}
+
+		if (event.key !== undefined) {
+			if (event.key === "Enter") {
+				turtleInput.update((t) => formula);
+			}
 		}
 	}
 </script>
@@ -62,51 +62,49 @@
 <main class="flex-grow self-center">
 	<Sidepanel />
 	<h1 class="py-2">L systems</h1>
-	{#if enableTransition}
-		<div transition:fly|global={{ y: -50, duration: 500 }}>
-			<p>An Interactive Fractal Generator</p>
-			<br />
-			<div class="flex" id="turtle-inputs">
-				<input
-					title="Turtle Formula Input"
-					type="text"
-					placeholder="Turtle Formula:"
-					class="transition-colors duration-100 ease-in-out bg-white shadow-md
+	<div>
+		<p>An Interactive Fractal Generator</p>
+		<br />
+		<div class="flex" id="turtle-inputs">
+			<input
+				title="Turtle Formula Input"
+				type="text"
+				placeholder="System:"
+				class="transition-colors duration-100 ease-in-out bg-white shadow-md
           focus:outline-0 border border-transparent placeholder-gray-600
           rounded-md py-2 px-4 block w-5/6 mr-1 appearance-none leading-tight
           ds-input text-center"
-					on:keypress={handleInput}
-					bind:value={formula}
-					aria-label="Turtle Formula Input"
-				/>
-				<input
-					title="Formula Iterations"
-					type="number"
-					min="1"
-					max="7"
-					class="transition-colors duration-100 ease-in-out bg-white shadow-md
+				on:keypress={handleInput}
+				bind:value={formula}
+				aria-label="Turtle Formula Input"
+			/>
+			<input
+				title="Formula Iterations"
+				type="number"
+				min="1"
+				max="8"
+				class="transition-colors duration-100 ease-in-out bg-white shadow-md
           focus:outline-0 border border-transparent placeholder-gray-600
           rounded-md py-2 px-2 block w-1/6 appearance-none leading-tight
           ds-input text-center"
-					bind:value={iters}
-					aria-label="Formula Iterations"
-				/>
-			</div>
-			<Turtle
-				svgScale={turtleScale}
-				originX={turtleOriginX}
-				originY={turtleOriginY}
-			/>
-			<input
-				title="Turtle SVG Scaler"
-				type="range"
-				min="0.01"
-				max="10"
-				step="0.05"
-				bind:value={turtleScale}
+				bind:value={iters}
+				aria-label="Formula Iterations"
 			/>
 		</div>
-	{/if}
+		<Turtle
+			svgScale={turtleScale}
+			originX={turtleOriginX}
+			originY={turtleOriginY}
+		/>
+		<input
+			title="Turtle SVG Scaler"
+			type="range"
+			min="0.01"
+			max="10"
+			step="0.05"
+			bind:value={turtleScale}
+		/>
+	</div>
 </main>
 <Footer />
 
@@ -117,7 +115,7 @@
 
 	h1 {
 		color: #ff3e00;
-		font-family: 'Oleo Script Swash Caps', cursive;
+		font-family: "Oleo Script Swash Caps", cursive;
 		font-style: italic;
 		font-size: 4em;
 		font-weight: 100;
@@ -144,17 +142,17 @@
 			flex-direction: column;
 		}
 
-		#turtle-inputs input[type='text'] {
+		#turtle-inputs input[type="text"] {
 			width: 100%;
 			margin-bottom: 0.25rem;
 		}
 	}
 
-	input[type='range'] {
+	input[type="range"] {
 		background-color: transparent;
 	}
 
-	input[type='range']:hover {
+	input[type="range"]:hover {
 		cursor: pointer;
 	}
 

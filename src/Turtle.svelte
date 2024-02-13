@@ -1,19 +1,19 @@
 <script lang="ts">
-	import { fly } from 'svelte/transition';
-	import { path } from 'd3-path';
+	import { fly } from "svelte/transition";
+	// import { path } from "d3-path";
 	import {
 		turtleInput,
 		turtleIter,
 		svgStrokeColor,
 		turnAngle,
 		svgStrokeWidth,
-	} from './stores';
+	} from "./stores";
 
 	export let svgScale: number;
 	export let originX = 0;
 	export let originY = 0;
 	let snackbarVis = false;
-	let snackMsg = 'Copied to Clipboard!';
+	let snackMsg = "Copied to Clipboard!";
 	/** Only valid instructions are 'F', 'f', '-', '+'
 	 * 'F' means move forward one unit and trace the path with a line.
 	 * 'f' means move forward one unit but don't draw anything.
@@ -31,7 +31,7 @@
 
 	const DEG_TO_RAD = Math.PI / 180;
 
-	let inputFormula = '';
+	let inputFormula = "";
 	let numIters = 1;
 	turtleInput.subscribe((value) => {
 		inputFormula = value;
@@ -46,9 +46,9 @@
 	// The input sequence has the following format:
 	// formula,rule1:output1,rule2:output2,...,ruleN:outputN
 	function transformSequence(formulat: string, iters: number) {
-		let seq = formulat.trim().split(',');
+		let seq = formulat.trim().split(",");
 		if (seq.length === 0) {
-			return '';
+			return "";
 		} else if (seq.length === 1) {
 			return seq[0];
 		}
@@ -58,11 +58,11 @@
 		// Create a mapping of rules to their outputs
 		// There can't be more than one output for a rule
 		for (const rule of seq) {
-			let r = rule.split(':');
+			let r = rule.split(":");
 			rules[r[0]] = r[1];
 		}
-		let transformed = '';
-		let new_cmds = cmds ?? '';
+		let transformed = "";
+		let new_cmds = cmds ?? "";
 
 		for (let i = 0; i < iters; i++) {
 			// Apply transformation
@@ -74,46 +74,84 @@
 				}
 			}
 			new_cmds = transformed;
-			transformed = '';
+			transformed = "";
 		}
 
 		return new_cmds;
 	}
 
-	function draw_svg(f: string, turn_amt = 45, move_amt = 2) {
+	// function draw_svg(f: string, turn_amt = 45, move_amt = 2) {
+	// 	let saved_states: { x: number; y: number; angle: number }[] = [];
+	// 	let loc = { x: 0, y: 0, angle: 0 };
+	// 	let ctx = path();
+	// 	ctx.moveTo(loc.x, loc.y);
+
+	// 	f.split("").forEach((t: string) => {
+	// 		let { x, y, angle } = loc;
+	// 		if ("ABCDEFGHIJabcdefghij".includes(t)) {
+	// 			loc.x = x + Math.sin(angle * DEG_TO_RAD) * move_amt;
+	// 			loc.y = y - Math.cos(angle * DEG_TO_RAD) * move_amt;
+	// 			if ("ABCDEFGHIJ".includes(t)) {
+	// 				ctx.lineTo(loc.x, loc.y);
+	// 			}
+	// 			ctx.moveTo(loc.x, loc.y);
+	// 		} else if (t === "+") {
+	// 			loc.angle = (angle + turn_amt) % 360;
+	// 		} else if (t === "-") {
+	// 			loc.angle = (angle - turn_amt) % 360;
+	// 		} else if (t === "[") {
+	// 			saved_states.push({ x: x, y: y, angle: angle });
+	// 		} else if (t === "]") {
+	// 			let prev = saved_states.pop();
+	// 			if (prev) {
+	// 				loc.x = prev.x;
+	// 				loc.y = prev.y;
+	// 				loc.angle = prev.angle;
+	// 				ctx.moveTo(loc.x, loc.y);
+	// 			}
+	// 		}
+	// 	});
+	// 	ctx.closePath();
+
+	// 	return ctx.toString();
+	// }
+
+	function draw_rule(f: string, turn_amt = 45, move_amt = 2) {
 		let saved_states: { x: number; y: number; angle: number }[] = [];
 		let loc = { x: 0, y: 0, angle: 0 };
-		let ctx = path();
-		ctx.moveTo(loc.x, loc.y);
-
-		f.split('').forEach((t: string) => {
-			let { x, y, angle } = loc;
-			if ('ABCDEFGHIJabcdefghij'.includes(t)) {
-				loc.x = x + Math.sin(angle * DEG_TO_RAD) * move_amt;
-				loc.y = y - Math.cos(angle * DEG_TO_RAD) * move_amt;
-				if ('ABCDEFGHIJ'.includes(t)) {
-					ctx.lineTo(loc.x, loc.y);
-				}
-				ctx.moveTo(loc.x, loc.y);
-			} else if (t === '+') {
-				loc.angle = (angle + turn_amt) % 360;
-			} else if (t === '-') {
-				loc.angle = (angle - turn_amt) % 360;
-			} else if (t === '[') {
-				saved_states.push({ x: x, y: y, angle: angle });
-			} else if (t === ']') {
-				let prev = saved_states.pop();
-				if (prev) {
-					loc.x = prev.x;
-					loc.y = prev.y;
-					loc.angle = prev.angle;
+		const canvas = <HTMLCanvasElement>document.getElementById("turtle-canvas");
+		let ctx = canvas.getContext("2d")?;
+		if (ctx !== null) {
+			ctx.moveTo(loc.x, loc.y);
+			f.split("").forEach((t: string) => {
+				let { x, y, angle } = loc;
+				if ("ABCDEFGHIJabcdefghij".includes(t)) {
+					loc.x = x + Math.sin(angle * DEG_TO_RAD) * move_amt;
+					loc.y = y - Math.cos(angle * DEG_TO_RAD) * move_amt;
+					if ("ABCDEFGHIJ".includes(t)) {
+						ctx.lineTo(loc.x, loc.y);
+					}
 					ctx.moveTo(loc.x, loc.y);
+				} else if (t === "+") {
+					loc.angle = (angle + turn_amt) % 360;
+				} else if (t === "-") {
+					loc.angle = (angle - turn_amt) % 360;
+				} else if (t === "[") {
+					saved_states.push({ x: x, y: y, angle: angle });
+				} else if (t === "]") {
+					let prev = saved_states.pop();
+					if (prev) {
+						loc.x = prev.x;
+						loc.y = prev.y;
+						loc.angle = prev.angle;
+						ctx.moveTo(loc.x, loc.y);
+					}
 				}
-			}
-		});
-		ctx.closePath();
+			});
+			ctx.closePath();
 
-		return ctx.toString();
+			return ctx.toString();
+		}
 	}
 
 	function panViewportLeft(_e: Event) {
@@ -142,11 +180,11 @@
 			svgScale,
 			originX,
 			originY,
-		].join('|');
-		const shareable = '#' + window.btoa(stateParams);
+		].join("|");
+		const shareable = "#" + window.btoa(stateParams);
 		location.hash = shareable;
 		if (!navigator.clipboard) {
-			snackMsg = 'URL Updated!';
+			snackMsg = "URL Updated!";
 			snackbarVis = true;
 			setTimeout(() => {
 				snackbarVis = false;
@@ -154,7 +192,7 @@
 			return;
 		} else {
 			navigator.clipboard
-				.writeText(location.origin + '/' + shareable)
+				.writeText(location.origin + "/" + shareable)
 				.then(() => {
 					snackbarVis = true;
 					setTimeout(() => {
@@ -168,7 +206,7 @@
 	}
 
 	function clearState() {
-		location.assign('/');
+		location.assign("/");
 	}
 
 	// svgScale * svg width gives the current width of the viewport
@@ -179,19 +217,19 @@
 </script>
 
 <div
-	transition:fly|global={{ y: -50, duration: 500 }}
 	class="svg-box items-center transition-colors duration-100 ease-in-out
   bg-white shadow-md focus:outline-0 border border-transparent
   placeholder-gray-600 rounded-md block w-full appearance-none leading-tight
   my-2"
 >
-	<svg viewBox={svgViewBox}>
+	<!-- <svg viewBox={svgViewBox} id="system-svg">
 		<path
 			d={draw_svg(turtleFormula, $turnAngle)}
 			stroke={$svgStrokeColor}
 			stroke-width={$svgStrokeWidth}
 		/>
-	</svg>
+	</svg> -->
+	<canvas id="turtle-canvas"></canvas>
 </div>
 <div
 	class="inline-flex transition-colors duration-100 ease-in-out bg-white shadow
