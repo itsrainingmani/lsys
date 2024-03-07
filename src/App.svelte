@@ -59,9 +59,14 @@
 	}
 </script>
 
-<main class="flex-grow self-center">
+<main class="flex-grow self-center w-full">
 	<Sidepanel />
 	<h1 class="py-2">L systems</h1>
+	<Turtle
+		svgScale={turtleScale}
+		originX={turtleOriginX}
+		originY={turtleOriginY}
+	/>
 	<div>
 		<p>An Interactive Fractal Generator</p>
 		<br />
@@ -91,11 +96,6 @@
 				aria-label="Formula Iterations"
 			/>
 		</div>
-		<Turtle
-			svgScale={turtleScale}
-			originX={turtleOriginX}
-			originY={turtleOriginY}
-		/>
 		<input
 			title="Turtle SVG Scaler"
 			type="range"
@@ -123,7 +123,7 @@
 	}
 
 	/* Media Query - this only fires when the condition is met */
-	@media (max-width: 640px) {
+	/* @media (max-width: 640px) {
 		p {
 			font-size: 1em;
 		}
@@ -146,7 +146,7 @@
 			width: 100%;
 			margin-bottom: 0.25rem;
 		}
-	}
+	} */
 
 	input[type="range"] {
 		background-color: transparent;
