@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { fly } from "svelte/transition";
-	import { path } from "d3-path";
+	import Snackbar from "./Snackbar.svelte";
 	import { transformSequence } from "./utils";
 	import {
 		turtleInput,
@@ -9,53 +8,70 @@
 		turnAngle,
 		svgStrokeWidth,
 	} from "./stores";
+	import { onMount } from "svelte";
 
-	export let svgScale: number;
-	export let originX = 0;
-	export let originY = 0;
 	let snackbarVis = false;
 	let snackMsg = "Copied to Clipboard!";
+	let ctx: CanvasRenderingContext2D | null = null;
+
+	onMount(() => {
+		const canvas = <HTMLCanvasElement>document.getElementById("turtle-canvas");
+		ctx = <CanvasRenderingContext2D>canvas.getContext("2d");
+	});
 	/** Only valid instructions are 'F', 'f', '-', '+'
 	 * 'F' means move forward one unit and trace the path with a line.
 	 * 'f' means move forward one unit but don't draw anything.
-	 * '-' means rotate counter-clockwise but don't move.
+	 * '-' means rotate counter-clockwise but don't move.k
 	 * '+' means rotate clockwise but don't move.
 	 */
-	let svg_w = 40 * svgScale; // This is relative to the actual width in pixels
-	let svg_h = 40 * svgScale; // This is relative to the actual height in pixels
-
-	$: svg_w = 40 * svgScale;
-	$: svg_h = 40 * svgScale;
-	$: svgViewBox = `${(-1 * svg_w) / 2 + originX} ${
-		(-1 * svg_h) / 2 + originY
-	} ${svg_w} ${svg_h}`;
 
 	const DEG_TO_RAD = Math.PI / 180;
 
-	let inputFormula = "";
-	let numIters = 1;
+	let formula_input = "";
+	let num_iters = 1;
+	let turn_amt = 45;
+	let stroke_color = "#ff3e00";
 	turtleInput.subscribe((value) => {
-		inputFormula = value;
+		formula_input = value;
 	});
 
 	turtleIter.subscribe((value) => {
-		numIters = value;
+		num_iters = value;
+	});
+	turnAngle.subscribe((value) => {
+		turn_amt = value;
+	});
+	svgStrokeColor.subscribe((value) => {
+		stroke_color = value;
 	});
 
-	$: turtleFormula = transformSequence(inputFormula, numIters);
-	function draw_svg(f: string, turn_amt = 45, move_amt = 2) {
+	$: turtleFormula = transformSequence(formula_input, num_iters);
+	function draw_system(
+		f: string,
+		turn_amt = 45,
+		move_amt = 2,
+		ctx: CanvasRenderingContext2D,
+	) {
+		const width = ctx.canvas.clientWidth;
+		const height = ctx.canvas.clientHeight;
+		ctx.clearRect(0, 0, width, height);
+		const centerx = Math.round(width / 2);
+		const centery = Math.floor(height / 2);
+		ctx.translate(20, 20);
+		console.log(centerx, centery);
+		ctx.strokeStyle = stroke_color;
 		let saved_states: { x: number; y: number; angle: number }[] = [];
 		let loc = { x: 0, y: 0, angle: 0 };
-		let ctx = path();
-		ctx.moveTo(loc.x, loc.y);
-
 		f.split("").forEach((t: string) => {
 			let { x, y, angle } = loc;
 			if ("ABCDEFGHIJabcdefghij".includes(t)) {
+				ctx.beginPath();
 				loc.x = x + Math.sin(angle * DEG_TO_RAD) * move_amt;
 				loc.y = y - Math.cos(angle * DEG_TO_RAD) * move_amt;
 				if ("ABCDEFGHIJ".includes(t)) {
+					// ctx.moveTo(loc.x, loc.y);
 					ctx.lineTo(loc.x, loc.y);
+					ctx.stroke();
 				}
 				ctx.moveTo(loc.x, loc.y);
 			} else if (t === "+") {
@@ -67,218 +83,43 @@
 			} else if (t === "]") {
 				let prev = saved_states.pop();
 				if (prev) {
+					ctx.beginPath();
 					loc.x = prev.x;
 					loc.y = prev.y;
 					loc.angle = prev.angle;
 					ctx.moveTo(loc.x, loc.y);
+					ctx.stroke();
 				}
 			}
 		});
 		ctx.closePath();
-
-		return ctx.toString();
+		return ctx.canvas.textContent;
 	}
 
-	// function draw_rule(f: string, turn_amt = 45, move_amt = 2) {
-	// 	let saved_states: { x: number; y: number; angle: number }[] = [];
-	// 	let loc = { x: 0, y: 0, angle: 0 };
-	// 	const canvas = <HTMLCanvasElement>document.getElementById("turtle-canvas");
-	// 	let ctx = canvas.getContext("2d")?;
-	// 	if (ctx !== null) {
-	// 		ctx.moveTo(loc.x, loc.y);
-	// 		f.split("").forEach((t: string) => {
-	// 			let { x, y, angle } = loc;
-	// 			if ("ABCDEFGHIJabcdefghij".includes(t)) {
-	// 				loc.x = x + Math.sin(angle * DEG_TO_RAD) * move_amt;
-	// 				loc.y = y - Math.cos(angle * DEG_TO_RAD) * move_amt;
-	// 				if ("ABCDEFGHIJ".includes(t)) {
-	// 					ctx.lineTo(loc.x, loc.y);
-	// 				}
-	// 				ctx.moveTo(loc.x, loc.y);
-	// 			} else if (t === "+") {
-	// 				loc.angle = (angle + turn_amt) % 360;
-	// 			} else if (t === "-") {
-	// 				loc.angle = (angle - turn_amt) % 360;
-	// 			} else if (t === "[") {
-	// 				saved_states.push({ x: x, y: y, angle: angle });
-	// 			} else if (t === "]") {
-	// 				let prev = saved_states.pop();
-	// 				if (prev) {
-	// 					loc.x = prev.x;
-	// 					loc.y = prev.y;
-	// 					loc.angle = prev.angle;
-	// 					ctx.moveTo(loc.x, loc.y);
-	// 				}
-	// 			}
-	// 		});
-	// 		ctx.closePath();
-
-	// 		return ctx.toString();
-	// 	}
-	// }
-
-	function panViewportLeft(_e: Event) {
-		originX += 2 * svgScale;
+	$: if (turtleFormula.length > 0 && num_iters > 0 && ctx) {
+		console.log(turtleFormula);
+		console.log(draw_system(turtleFormula, turn_amt, 2, ctx));
 	}
-
-	function panViewportRight(_e: Event) {
-		originX -= 2 * svgScale;
-	}
-
-	function panViewportUp(_e: Event) {
-		originY += 2 * svgScale;
-	}
-
-	function panViewportDown(_e: Event) {
-		originY -= 2 * svgScale;
-	}
-
-	function shareState() {
-		const stateParams = [
-			$turtleInput,
-			$turtleIter,
-			$turnAngle,
-			$svgStrokeColor,
-			$svgStrokeWidth,
-			svgScale,
-			originX,
-			originY,
-		].join("|");
-		const shareable = "#" + window.btoa(stateParams);
-		location.hash = shareable;
-		if (!navigator.clipboard) {
-			snackMsg = "URL Updated!";
-			snackbarVis = true;
-			setTimeout(() => {
-				snackbarVis = false;
-			}, 1500);
-			return;
-		} else {
-			navigator.clipboard
-				.writeText(location.origin + "/" + shareable)
-				.then(() => {
-					snackbarVis = true;
-					setTimeout(() => {
-						snackbarVis = false;
-					}, 1500);
-				})
-				.catch((err) => {
-					console.log(err);
-				});
-		}
-	}
-
-	function clearState() {
-		location.assign("/");
-	}
-
-	// svgScale * svg width gives the current width of the viewport
-	// svgScale * svg height gives the current height of the viewport
-	// event.srcElement.clientHeight gets the height of the parent div
-	// event.srcElement.clientWidth gets the width of the parent div
-	// the mouse events are in terms of the parent div and not the svg viewport
 </script>
 
-<div
-	class="svg-box items-center transition-colors duration-100 ease-in-out
-  bg-white shadow-md focus:outline-0 border border-transparent
-  placeholder-gray-600 rounded-md block w-full appearance-none leading-tight
-  my-2"
->
-	<svg viewBox={svgViewBox} id="system-svg" width="100%" height="100%">
-		<path
-			d={draw_svg(turtleFormula, $turnAngle)}
-			stroke={$svgStrokeColor}
-			stroke-width={$svgStrokeWidth}
-		/>
-	</svg>
+<div>
+	<canvas id="turtle-canvas" width="400" height="400">
+		L-Systems Generated Output
+	</canvas>
+	{#if snackbarVis}
+		<Snackbar message={snackMsg} />
+	{/if}
 </div>
-<!-- <div
-	class="inline-flex transition-colors duration-100 ease-in-out bg-white shadow
-  rounded appearance-none leading-tight"
->
-	<button
-		title="Pan Left"
-		on:click={panViewportLeft}
-		class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-l"
-	>
-		←
-	</button>
-	<button
-		title="Pan Up"
-		on:click={panViewportUp}
-		class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-none"
-	>
-		↑
-	</button>
-	<button
-		title="Pan Right"
-		on:click={panViewportRight}
-		class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-none"
-	>
-		→
-	</button>
-	<button
-		title="Pan Down"
-		on:click={panViewportDown}
-		class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-r"
-	>
-		↓
-	</button>
-</div>
-<div
-	class="inline-flex transition-colors duration-100 ease-in-out bg-white shadow
-  rounded appearance-none leading-tight mx-2 my-1"
->
-	<button
-		title="Share Fractal"
-		on:click={shareState}
-		class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-l"
-	>
-		🔗
-	</button>
-	<button
-		title="Clear Fractal"
-		on:click={clearState}
-		class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-r"
-	>
-		✖️
-	</button>
-</div> -->
-{#if snackbarVis}
-	<div
-		transition:fly|global={{ y: 200, duration: 200 }}
-		class="snackbar transition-colors bg-gray-600 shadow-md focus:outline-0
-    border border-transparent rounded-md px-2 py-2 appearance-none leading-tight"
-	>
-		<p class="white">{snackMsg}</p>
-	</div>
-{/if}
 
 <style>
-	svg {
-		stroke-opacity: 90%;
-		/* position: absolute;
+	canvas {
+		position: absolute;
 		top: 0;
-		left: 0; */
-	}
-
-	.svg-box {
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: -1;
 		background-color: #f8fcff;
 		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23c6ddff' fill-opacity='0.6'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-	}
-
-	path {
-		fill: none;
-	}
-
-	.snackbar {
-		min-width: 250px; /* Set a default minimum width */
-		margin-left: -125px; /* Divide value of min-width by 2 */
-		text-align: center; /* Centered text */
-		position: fixed; /* Sit on top of the screen */
-		z-index: 1; /* Add a z-index if needed */
-		left: 50%; /* Center the snackbar */
-		bottom: 30px; /* 30px from the bottom */
 	}
 </style>

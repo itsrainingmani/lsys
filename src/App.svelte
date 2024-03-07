@@ -57,69 +57,119 @@
 			}
 		}
 	}
-</script>
 
-<main class="flex-grow self-center w-full">
-	<Sidepanel />
-	<h1 class="py-2">L systems</h1>
-	<Turtle
-		svgScale={turtleScale}
-		originX={turtleOriginX}
-		originY={turtleOriginY}
-	/>
-	<div>
-		<p>An Interactive Fractal Generator</p>
-		<br />
-		<div class="flex" id="turtle-inputs">
-			<input
-				title="Turtle Formula Input"
-				type="text"
-				placeholder="System:"
-				class="transition-colors duration-100 ease-in-out bg-white shadow-md
-          focus:outline-0 border border-transparent placeholder-gray-600
-          rounded-md py-2 px-4 block w-5/6 mr-1 appearance-none leading-tight
-          ds-input text-center"
-				on:keypress={handleInput}
-				bind:value={formula}
-				aria-label="Turtle Formula Input"
-			/>
-			<input
-				title="Formula Iterations"
-				type="number"
-				min="1"
-				max="8"
-				class="transition-colors duration-100 ease-in-out bg-white shadow-md
-          focus:outline-0 border border-transparent placeholder-gray-600
-          rounded-md py-2 px-2 block w-1/6 appearance-none leading-tight
-          ds-input text-center"
-				bind:value={iters}
-				aria-label="Formula Iterations"
-			/>
-		</div>
-		<input
-			title="Turtle SVG Scaler"
-			type="range"
-			min="0.01"
-			max="10"
-			step="0.05"
-			bind:value={turtleScale}
-		/>
-	</div>
-</main>
-<Footer />
-
-<style>
-	p {
-		font-size: 1.5em;
+	function shareState() {
+		const stateParams = [
+			$turtleInput,
+			$turtleIter,
+			$turnAngle,
+			$svgStrokeColor,
+			$svgStrokeWidth,
+		].join("|");
+		const shareable = "#" + window.btoa(stateParams);
+		location.hash = shareable;
+		if (!navigator.clipboard) {
+			snackMsg = "URL Updated!";
+			snackbarVis = true;
+			setTimeout(() => {
+				snackbarVis = false;
+			}, 1500);
+			return;
+		} else {
+			navigator.clipboard
+				.writeText(location.origin + "/" + shareable)
+				.then(() => {
+					snackbarVis = true;
+					setTimeout(() => {
+						snackbarVis = false;
+					}, 1500);
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		}
 	}
 
+	function clearState() {
+		location.assign("/");
+	}
+</script>
+
+<main class="flex-grow self-center">
+	<Sidepanel />
+	<div class="flex flex-row items-center justify-start w-full">
+		<h1 class="text-left px-4">L systems</h1>
+		<section>
+			<div class="flex w-full" id="turtle-inputs">
+				<input
+					title="Turtle Formula Input"
+					type="text"
+					placeholder="Rules:"
+					class="transition-colors w-full duration-100 ease-in-out bg-white shadow-md
+          focus:outline-0 border border-transparent placeholder-gray-600
+          rounded-md py-2 px-4 block mr-1 appearance-none leading-tight
+          ds-input text-center"
+					on:keypress={handleInput}
+					bind:value={formula}
+					aria-label="Turtle Formula Input"
+				/>
+				<input
+					title="Formula Iterations"
+					type="number"
+					min="1"
+					max="8"
+					class="transition-colors duration-100 ease-in-out bg-white shadow-md
+          focus:outline-0 border border-transparent placeholder-gray-600
+          rounded-md py-2 px-2 block w-2/6 appearance-none leading-tight
+          ds-input text-center"
+					bind:value={iters}
+					aria-label="Formula Iterations"
+				/>
+			</div>
+		</section>
+		<div
+			class="inline-flex transition-colors duration-100 ease-in-out bg-white shadow
+  rounded appearance-none leading-tight mx-2 my-1"
+		>
+			<button
+				title="Share Fractal"
+				on:click={shareState}
+				class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-l"
+			>
+				🔗
+			</button>
+			<button
+				title="Clear Fractal"
+				on:click={clearState}
+				class="bg-white hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-r"
+			>
+				✖️
+			</button>
+		</div>
+	</div>
+	<Turtle />
+</main>
+
+<!-- <Footer /> -->
+
+<style>
+	main {
+		width: 100%;
+		min-height: 100%;
+		position: relative;
+		z-index: 1;
+		/* max-width: 640px; */
+	}
 	h1 {
 		color: #ff3e00;
 		font-family: "Oleo Script Swash Caps", cursive;
 		font-style: italic;
-		font-size: 4em;
+		font-size: 2em;
 		font-weight: 100;
 		line-height: normal;
+	}
+	p {
+		font-size: 1.5em;
 	}
 
 	/* Media Query - this only fires when the condition is met */
@@ -155,9 +205,4 @@
 	input[type="range"]:hover {
 		cursor: pointer;
 	}
-
-	/* main {
-    width: 100%;
-    max-width: 400px;
-  } */
 </style>
