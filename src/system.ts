@@ -46,6 +46,11 @@ export class LSystem {
 	}
 }
 
+export interface Pos {
+	x: number;
+	y: number;
+}
+
 export class DrawingContext {
 	context: CanvasRenderingContext2D;
 	width: number;
@@ -66,6 +71,14 @@ export class DrawingContext {
 		this.context.imageSmoothingEnabled = false;
 	}
 
+	drawLine(start_pos: Pos, end_pos: Pos) {
+		this.context.beginPath();
+		this.context.moveTo(start_pos.x, start_pos.y);
+		this.context.lineTo(end_pos.x, end_pos.y);
+		this.context.stroke();
+		this.context.closePath();
+	}
+
 	updateColor(strokeColor: string) {
 		this.context.strokeStyle = strokeColor;
 	}
@@ -81,33 +94,28 @@ export class DrawingContext {
 
 export class Turtle {
 	context: DrawingContext;
-	x: number;
-	y: number;
+	pos: Pos;
 	moveAmt: number = 10;
 	turnAngle: number;
 
-	constructor(context: DrawingContext, x: number, y: number, turnAngle = 45) {
+	constructor(context: DrawingContext, start_pos: Pos, turnAngle = 45) {
 		this.context = context;
-		this.x = x;
-		this.y = y;
+		this.pos = start_pos;
 		this.turnAngle = turnAngle;
 	}
 
 	moveForward(by?: number) {
 		console.log(this.context.context);
-		let end_x =
-			this.x + Math.sin(this.turnAngle * DEG_TO_RAD) * (by ?? this.moveAmt);
-		let end_y =
-			this.y + Math.cos(this.turnAngle * DEG_TO_RAD) * (by ?? this.moveAmt);
-		// let [end_x, end_y] = [100, 100];
-		this.context.context.beginPath();
-		this.context.context.moveTo(this.x, this.y);
-		this.context.context.lineTo(end_x, end_y);
-		this.context.context.stroke();
-		this.context.context.closePath();
-		this.x = end_x;
-		this.y = end_y;
-		// this.context.context.fillRect(this.x, this.y, 100, 100);
+		let end_pos = {
+			x:
+				this.pos.x +
+				Math.sin(this.turnAngle * DEG_TO_RAD) * (by ?? this.moveAmt),
+			y:
+				this.pos.y +
+				Math.cos(this.turnAngle * DEG_TO_RAD) * (by ?? this.moveAmt),
+		};
+		this.context.drawLine(this.pos, end_pos);
+		this.pos = end_pos;
 	}
 
 	turn(by: number) {

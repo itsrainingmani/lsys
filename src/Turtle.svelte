@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { DrawingContext, LSystem, Turtle } from "./system";
+	import { DrawingContext, LSystem, Turtle, type Pos } from "./system";
 	import Snackbar from "./Snackbar.svelte";
 	import { transformSequence } from "./utils";
 	import {
@@ -112,11 +112,13 @@
 
 	$: if (formula_input.length > 0 && num_iters > 0 && ctx) {
 		console.log(formula_input);
-		const origin_x = Math.round(ctx.canvas.width / 2);
-		const origin_y = Math.round(ctx.canvas.height / 2);
+		const origin: Pos = {
+			x: Math.round(ctx.canvas.width / 2),
+			y: Math.round(ctx.canvas.height / 2),
+		};
 		let drawing_context = new DrawingContext(ctx, stroke_color, stroke_width);
 		let lsys = new LSystem(formula_input);
-		let turtle = new Turtle(drawing_context, origin_x, origin_y, turn_amt);
+		let turtle = new Turtle(drawing_context, origin, turn_amt);
 		turtle.moveForward();
 		turtle.turn(45);
 		turtle.moveForward();
