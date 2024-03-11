@@ -8,6 +8,12 @@ export class LSystem {
 	// The system is formalized as so ->
 	// Set(Symbols);Start;Production Rules,...
 	// F,G;F;F:F+F+F,G:G+G+G
+	/** Only valid instructions are 'F', 'f', '-', '+'
+	 * 'F' means move forward one unit and trace the path with a line.
+	 * 'f' means move forward one unit but don't draw anything.
+	 * '-' means rotate counter-clockwise but don't move.k
+	 * '+' means rotate clockwise but don't move.
+	 */
 	constructor(system: string) {
 		if (!system.includes(":")) {
 			throw new Error("System is invalid");
@@ -104,7 +110,7 @@ export class Turtle {
 		this.turnAngle = turnAngle;
 	}
 
-	moveForward(by?: number) {
+	moveForward(by?: number): Turtle {
 		console.log(this.context.context);
 		let end_pos = {
 			x:
@@ -116,9 +122,12 @@ export class Turtle {
 		};
 		this.context.drawLine(this.pos, end_pos);
 		this.pos = end_pos;
+
+		return this;
 	}
 
-	turn(by: number) {
+	turn(by: number): Turtle {
 		this.turnAngle += by;
+		return this;
 	}
 }

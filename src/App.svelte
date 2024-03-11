@@ -10,12 +10,15 @@
 		svgStrokeWidth,
 		turnAngle,
 	} from "./stores";
+	import Snackbar from "./Snackbar.svelte";
 
 	let formula = "";
 	let iters = 1;
 	let turtleScale = 1;
 	let turtleOriginX = 0;
 	let turtleOriginY = 0;
+	let snackbarVis = false;
+	let snackMsg = "Copied to Clipboard!";
 
 	$: if (formula.length === 0) {
 		turtleInput.update((t) => formula);
@@ -95,7 +98,7 @@
 	}
 </script>
 
-<main class="flex-grow self-center">
+<main class="flex-grow self-center relative z-10 min-h-full w-full">
 	<Sidepanel />
 	<div class="flex flex-row items-center justify-start w-full">
 		<h1 class="text-left px-4">L systems</h1>
@@ -148,18 +151,14 @@
 		</div>
 	</div>
 	<Turtle />
+	{#if snackbarVis}
+		<Snackbar message={snackMsg} />
+	{/if}
 </main>
 
 <!-- <Footer /> -->
 
 <style>
-	main {
-		width: 100%;
-		min-height: 100%;
-		position: relative;
-		z-index: 1;
-		/* max-width: 640px; */
-	}
 	h1 {
 		color: #ff3e00;
 		font-family: "Oleo Script Swash Caps", cursive;

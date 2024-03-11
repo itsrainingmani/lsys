@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { DrawingContext, LSystem, Turtle, type Pos } from "./system";
-	import Snackbar from "./Snackbar.svelte";
-	import { transformSequence } from "./utils";
 	import {
 		turtleInput,
 		turtleIter,
@@ -11,22 +9,12 @@
 	} from "./stores";
 	import { onMount } from "svelte";
 
-	let snackbarVis = false;
-	let snackMsg = "Copied to Clipboard!";
 	let ctx: CanvasRenderingContext2D | null = null;
 
 	onMount(() => {
 		const canvas = <HTMLCanvasElement>document.getElementById("turtle-canvas");
 		ctx = <CanvasRenderingContext2D>canvas.getContext("2d");
 	});
-	/** Only valid instructions are 'F', 'f', '-', '+'
-	 * 'F' means move forward one unit and trace the path with a line.
-	 * 'f' means move forward one unit but don't draw anything.
-	 * '-' means rotate counter-clockwise but don't move.k
-	 * '+' means rotate clockwise but don't move.
-	 */
-
-	const DEG_TO_RAD = Math.PI / 180;
 
 	let formula_input = "";
 	let num_iters = 1;
@@ -119,29 +107,23 @@
 		let drawing_context = new DrawingContext(ctx, stroke_color, stroke_width);
 		let lsys = new LSystem(formula_input);
 		let turtle = new Turtle(drawing_context, origin, turn_amt);
-		turtle.moveForward();
-		turtle.turn(45);
-		turtle.moveForward();
+		turtle.moveForward().turn(45).moveForward();
 	}
 </script>
 
 <div>
-	<canvas id="turtle-canvas" width="400" height="400">
+	<canvas
+		class="absolute top-0 left-0 w-full h-full -z-10"
+		id="turtle-canvas"
+		width="800"
+		height="800"
+	>
 		L-Systems Generated Output
 	</canvas>
-	{#if snackbarVis}
-		<Snackbar message={snackMsg} />
-	{/if}
 </div>
 
 <style>
 	canvas {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		z-index: -1;
 		/* border: 10px solid red; */
 		background-color: #f8fcff;
 		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23c6ddff' fill-opacity='0.6'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
