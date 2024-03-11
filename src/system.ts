@@ -46,6 +46,8 @@ export class LSystem {
 			let substituted = transformed.flatMap((t) => {
 				return this.rule_map.get(t) ?? [t];
 			});
+
+			transformed = substituted;
 		}
 
 		return transformed;
@@ -126,7 +128,7 @@ export class Turtle {
 		return this;
 	}
 
-	turn(by: number): Turtle {
+	rotate(by: number): Turtle {
 		this.turnAngle += by;
 		return this;
 	}

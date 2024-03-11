@@ -26,3 +26,9 @@ test("rewrite rule map", () => {
 	]);
 	expect(lsys.rule_map).toEqual(rewrite_map);
 });
+
+test("rewrite 1st iter", () => {
+	let lsys = new LSystem("F;F;F:F+F+F+F");
+	let first_iter = lsys.rewrite(1);
+	expect(first_iter).toEqual(["F", "+", "F", "+", "F", "+", "F"]);
+});
