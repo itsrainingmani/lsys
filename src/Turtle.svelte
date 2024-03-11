@@ -38,66 +38,6 @@
 		stroke_width = value;
 	});
 
-	// $: turtleFormula = transformSequence(formula_input, num_iters);
-	// function draw_system(
-	// 	f: string,
-	// 	turn_amt = 45,
-	// 	move_amt = 2,
-	// 	ctx: CanvasRenderingContext2D,
-	// ) {
-	// 	const width = ctx.canvas.width;
-	// 	const height = ctx.canvas.height;
-	// 	console.log(width, height);
-	// 	console.log(ctx.canvas.clientWidth, ctx.canvas.clientHeight);
-	// 	ctx.clearRect(0, 0, width, height);
-	// 	const centerx = Math.round(width / 2);
-	// 	const centery = Math.round(height / 2);
-	// 	ctx.translate(centerx, centery);
-	// 	ctx.strokeStyle = "blue";
-	// 	ctx.beginPath();
-	// 	ctx.moveTo(0, 0);
-	// 	ctx.lineTo(100, 100);
-	// 	ctx.stroke();
-	// 	// ctx.fillRect(0, 0, 80, 80);
-	// 	ctx.closePath();
-	// 	// console.log(centerx, centery);
-	// 	// ctx.fillRect(0, 0, 80, 90);
-	// 	// let saved_states: { x: number; y: number; angle: number }[] = [];
-	// 	// let loc = { x: 0, y: 0, angle: 0 };
-	// 	// f.split("").forEach((t: string) => {
-	// 	// 	let { x, y, angle } = loc;
-	// 	// 	if ("ABCDEFGHIJabcdefghij".includes(t)) {
-	// 	// 		ctx.beginPath();
-	// 	// 		loc.x = x + Math.sin(angle * DEG_TO_RAD) * move_amt;
-	// 	// 		loc.y = y - Math.cos(angle * DEG_TO_RAD) * move_amt;
-	// 	// 		if ("ABCDEFGHIJ".includes(t)) {
-	// 	// 			// ctx.moveTo(loc.x, loc.y);
-	// 	// 			ctx.lineTo(loc.x, loc.y);
-	// 	// 			ctx.stroke();
-	// 	// 		}
-	// 	// 		ctx.moveTo(loc.x, loc.y);
-	// 	// 	} else if (t === "+") {
-	// 	// 		loc.angle = (angle + turn_amt) % 360;
-	// 	// 	} else if (t === "-") {
-	// 	// 		loc.angle = (angle - turn_amt) % 360;
-	// 	// 	} else if (t === "[") {
-	// 	// 		saved_states.push({ x: x, y: y, angle: angle });
-	// 	// 	} else if (t === "]") {
-	// 	// 		let prev = saved_states.pop();
-	// 	// 		if (prev) {
-	// 	// 			ctx.beginPath();
-	// 	// 			loc.x = prev.x;
-	// 	// 			loc.y = prev.y;
-	// 	// 			loc.angle = prev.angle;
-	// 	// 			ctx.moveTo(loc.x, loc.y);
-	// 	// 			ctx.stroke();
-	// 	// 		}
-	// 	// 	}
-	// 	// });
-	// 	ctx.closePath();
-	// 	return ctx.canvas.textContent;
-	// }
-
 	$: if (formula_input.length > 0 && num_iters > 0 && ctx) {
 		console.log(formula_input);
 		const origin: Pos = {
@@ -107,7 +47,45 @@
 		let drawing_context = new DrawingContext(ctx, stroke_color, stroke_width);
 		let lsys = new LSystem(formula_input);
 		let turtle = new Turtle(drawing_context, origin, turn_amt);
-		turtle.moveForward().turn(45).moveForward();
+		let current_system = lsys.rewrite(num_iters);
+		type State = {
+			pos: Pos;
+			angle: number;
+		};
+		let saved_states: State[] = [];
+		let loc: State = {
+			pos: { x: 0, y: 0 },
+			angle: 0,
+		};
+		for (let move of current_system) {
+			let { pos, angle } = loc;
+			if (move.match("[A-Z]")) {
+				turtle.moveForward();
+				loc.pos = turtle.pos;
+			} else if (move.match("[a-z]")) {
+				turtle.advance();
+				loc.pos = turtle.pos;
+			} else if (move === "+") {
+				turtle.rotate(turn_amt);
+				loc.angle = turtle.turnAngle;
+			} else if (move === "-") {
+				turtle.rotate(-turn_amt);
+				loc.angle = turtle.turnAngle;
+			} else if (move === "[") {
+				saved_states.push({
+					pos: { x: loc.pos.x, y: loc.pos.y },
+					angle: angle,
+				});
+			} else if (move === "]") {
+				let prev = saved_states.pop();
+				if (prev) {
+					loc = prev;
+					turtle.pos = loc.pos;
+					turtle.turnAngle = loc.angle;
+				}
+			}
+		}
+		// turtle.moveForward().rotate(45).moveForward();
 	}
 </script>
 

@@ -112,8 +112,7 @@ export class Turtle {
 		this.turnAngle = turnAngle;
 	}
 
-	moveForward(by?: number): Turtle {
-		console.log(this.context.context);
+	advance(by?: number) {
 		let end_pos = {
 			x:
 				this.pos.x +
@@ -122,14 +121,16 @@ export class Turtle {
 				this.pos.y +
 				Math.cos(this.turnAngle * DEG_TO_RAD) * (by ?? this.moveAmt),
 		};
-		this.context.drawLine(this.pos, end_pos);
 		this.pos = end_pos;
-
-		return this;
 	}
 
-	rotate(by: number): Turtle {
-		this.turnAngle += by;
-		return this;
+	moveForward(by?: number) {
+		let cur_pos = this.pos;
+		this.advance(by ?? this.moveAmt);
+		this.context.drawLine(cur_pos, this.pos);
+	}
+
+	rotate(by?: number) {
+		this.turnAngle = (this.turnAngle + (by ?? this.turnAngle)) % 360;
 	}
 }
