@@ -39,12 +39,12 @@
 	});
 
 	$: if (formula_input.length > 0 && num_iters > 0 && ctx) {
-		console.log(formula_input);
 		const origin: Pos = {
 			x: Math.round(ctx.canvas.width / 2),
 			y: Math.round(ctx.canvas.height / 2),
 		};
 		let drawing_context = new DrawingContext(ctx, stroke_color, stroke_width);
+		drawing_context.clear();
 		let lsys = new LSystem(formula_input);
 		let turtle = new Turtle(drawing_context, origin, turn_amt);
 		let current_system = lsys.rewrite(num_iters);

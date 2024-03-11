@@ -95,6 +95,10 @@ export class DrawingContext {
 		this.context.lineWidth = strokeWidth;
 	}
 
+	clear() {
+		this.context.clearRect(0, 0, this.width, this.height);
+	}
+
 	setup() {}
 	scaleBy(scale_factor: number) {}
 	pan(factor: number) {}
