@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Panzoom from "@panzoom/panzoom";
 	import { DrawingContext, LSystem, Turtle, type Pos } from "./system";
 	import {
 		turtleInput,
@@ -13,6 +14,9 @@
 
 	onMount(() => {
 		const canvas = <HTMLCanvasElement>document.getElementById("turtle-canvas");
+		const panzoom = Panzoom(canvas, {
+			maxScale: 5,
+		});
 		ctx = <CanvasRenderingContext2D>canvas.getContext("2d");
 	});
 
