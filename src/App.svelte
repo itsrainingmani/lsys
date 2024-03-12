@@ -120,7 +120,7 @@
 					title="Formula Iterations"
 					type="number"
 					min="1"
-					max="8"
+					max="15"
 					class="transition-colors duration-100 ease-in-out bg-white shadow-md
           focus:outline-0 border border-transparent placeholder-gray-600
           rounded-md py-2 px-2 block w-2/6 appearance-none leading-tight
