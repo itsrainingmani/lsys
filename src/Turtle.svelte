@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Panzoom from "@panzoom/panzoom";
-	import InfiniteCanvas, { type InfiniteCanvas } from "ef-infinite-canvas";
+	import InfiniteCanvas from "ef-infinite-canvas";
 	import { DrawingContext, LSystem, Turtle, type Pos } from "./system";
 	import {
 		turtleInput,
@@ -69,11 +69,20 @@
 
 	function canvasResize() {
 		// canvas = <HTMLCanvasElement>document.getElementById("turtle-canvas");
+		// if (canvas) {
+		// 	ctx?.clearRect(0, 0, canvas.width, canvas.height);
+		// 	console.log(canvas.width, canvas.height);
+		// 	canvas.width = window.innerWidth;
+		// 	canvas.height = window.innerHeight;
+		// 	console.log(canvas.width, canvas.height);
+		// 	drawTurtle();
+		// }
 		if (infCanvas) {
-			console.log(infCanvas.width, infCanvas.height);
+			ctx?.clearRect(0, 0, infCanvas.width, infCanvas.height);
+			console.log("before", infCanvas.width, infCanvas.height);
 			infCanvas.width = window.innerWidth;
 			infCanvas.height = window.innerHeight;
-			console.log(infCanvas.width, infCanvas.height);
+			console.log("after", infCanvas.width, infCanvas.height);
 			drawTurtle();
 		}
 	}
@@ -81,11 +90,11 @@
 	onMount(() => {
 		canvas = <HTMLCanvasElement>document.getElementById("turtle-canvas");
 		infCanvas = new InfiniteCanvas(canvas);
-		const panzoom = Panzoom(canvas, {
-			maxScale: 5,
-		});
+		// const panzoom = Panzoom(canvas, {
+		// 	maxScale: 5,
+		// });
 		ctx = <CanvasRenderingContext2D>infCanvas.getContext("2d");
-		// window.addEventListener("resize", canvasResize);
+		window.addEventListener("resize", canvasResize);
 	});
 
 	let formula_input = "";
