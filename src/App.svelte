@@ -5,9 +5,9 @@
 	import Sidepanel from "./Sidepanel.svelte";
 	import {
 		turtleInput,
-		turtleIter,
-		svgStrokeColor,
-		svgStrokeWidth,
+		systemIter,
+		strokeColor,
+		strokeWidth,
 		turnAngle,
 	} from "./stores";
 	import Snackbar from "./Snackbar.svelte";
@@ -19,12 +19,13 @@
 	let turtleOriginY = 0;
 	let snackbarVis = false;
 	let snackMsg = "Copied to Clipboard!";
+	let angles = [15, 30, 45, 60, 90];
 
 	$: if (formula.length === 0) {
 		turtleInput.update((t) => formula);
 	}
 
-	$: turtleIter.update((t) => iters);
+	$: systemIter.update((t) => iters);
 
 	// When the component is mounted, set enableTransition to true
 	// This will trigger the animation
@@ -37,11 +38,11 @@
 			console.log(stateParams);
 			$turtleInput = stateParams[0];
 			formula = stateParams[0];
-			$turtleIter = parseInt(stateParams[1]);
+			$systemIter = parseInt(stateParams[1]);
 			iters = parseInt(stateParams[1]);
 			$turnAngle = parseInt(stateParams[2]);
-			$svgStrokeColor = stateParams[3];
-			$svgStrokeWidth = parseFloat(stateParams[4]);
+			$strokeColor = stateParams[3];
+			$strokeWidth = parseFloat(stateParams[4]);
 			turtleScale = parseFloat(stateParams[5]);
 			turtleOriginX = parseFloat(stateParams[6]);
 			turtleOriginY = parseFloat(stateParams[7]);
@@ -64,10 +65,10 @@
 	function shareState() {
 		const stateParams = [
 			$turtleInput,
-			$turtleIter,
+			$systemIter,
 			$turnAngle,
-			$svgStrokeColor,
-			$svgStrokeWidth,
+			$strokeColor,
+			$strokeWidth,
 		].join("|");
 		const shareable = "#" + window.btoa(stateParams);
 		location.hash = shareable;
@@ -151,12 +152,10 @@
 		</div>
 	</div>
 	<Turtle />
-	{#if snackbarVis}
+	<!-- {#if snackbarVis}
 		<Snackbar message={snackMsg} />
-	{/if}
+	{/if} -->
 </main>
-
-<!-- <Footer /> -->
 
 <style>
 	h1 {

@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 
 export const turtleInput = writable("");
-export const turtleIter = writable(1);
-export const svgStrokeColor = writable("#ff3e00");
+export const systemIter = writable(1);
+export const strokeColor = writable("#ff3e00");
 export const turnAngle = writable(45);
-export const svgStrokeWidth = writable(1);
+export const strokeWidth = writable(1);

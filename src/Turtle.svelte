@@ -4,10 +4,10 @@
 	import { DrawingContext, LSystem, Turtle, type Pos } from "./system";
 	import {
 		turtleInput,
-		turtleIter,
-		svgStrokeColor,
+		systemIter,
+		strokeColor,
 		turnAngle,
-		svgStrokeWidth,
+		strokeWidth,
 	} from "./stores";
 	import { onMount } from "svelte";
 	import { draw } from "svelte/transition";
@@ -16,7 +16,13 @@
 	let canvas: HTMLCanvasElement | null = null;
 	let infCanvas: any;
 
-	function drawTurtle() {
+	function drawTurtle(
+		formula_input: string,
+		num_iters: number,
+		turn_amt: number,
+		stroke_color: string,
+		stroke_width: number,
+	) {
 		if (ctx) {
 			const origin: Pos = {
 				x: Math.round(ctx.canvas.width / 2),
@@ -67,6 +73,7 @@
 		}
 	}
 
+	// TODO: Remove the resize and maybe do dpi scaling here instead??
 	function canvasResize() {
 		// canvas = <HTMLCanvasElement>document.getElementById("turtle-canvas");
 		// if (canvas) {
@@ -83,7 +90,13 @@
 			infCanvas.width = window.innerWidth;
 			infCanvas.height = window.innerHeight;
 			console.log("after", infCanvas.width, infCanvas.height);
-			drawTurtle();
+			drawTurtle(
+				$turtleInput,
+				$systemIter,
+				$turnAngle,
+				$strokeColor,
+				$strokeWidth,
+			);
 		}
 	}
 
@@ -97,31 +110,36 @@
 		window.addEventListener("resize", canvasResize);
 	});
 
-	let formula_input = "";
-	let num_iters = 1;
-	let turn_amt = 45;
-	let stroke_color = "#ff3e00";
-	let stroke_width = 0.2;
-	turtleInput.subscribe((value) => {
-		formula_input = value;
-	});
+	// let formula_input = "";
+	// let num_iters = 1;
+	// let turn_amt = 45;
+	// let stroke_color = "#ff3e00";
+	// let stroke_width = 0.2;
+	// turtleInput.subscribe((value) => {
+	// 	formula_input = value;
+	// });
 
-	turtleIter.subscribe((value) => {
-		num_iters = value;
-	});
-	turnAngle.subscribe((value) => {
-		turn_amt = value;
-	});
-	svgStrokeColor.subscribe((value) => {
-		stroke_color = value;
-	});
-	svgStrokeWidth.subscribe((value) => {
-		stroke_width = value;
-	});
+	// systemIter.subscribe((value) => {
+	// 	num_iters = value;
+	// });
+	// turnAngle.subscribe((value) => {
+	// 	turn_amt = value;
+	// });
+	// strokeColor.subscribe((value) => {
+	// 	stroke_color = value;
+	// });
+	// strokeWidth.subscribe((value) => {
+	// 	stroke_width = value;
+	// });
 
-	$: if (formula_input.length > 0 && num_iters > 0 && ctx) {
-		drawTurtle();
-		// turtle.moveForward().rotate(45).moveForward();
+	$: if ($turtleInput.length > 0 && $systemIter > 0 && ctx) {
+		drawTurtle(
+			$turtleInput,
+			$systemIter,
+			$turnAngle,
+			$strokeColor,
+			$strokeWidth,
+		);
 	}
 </script>
 
