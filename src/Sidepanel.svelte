@@ -4,16 +4,14 @@
 	import { strokeColor, turnAngle, strokeWidth } from "./stores.js";
 
 	// let visible = false;
+	// let open = false;
+	// let disabled = false;
 
 	let angles = [15, 30, 45, 60, 90];
 </script>
 
-<!-- {#if visible} -->
 <div id="sidepanel" class="sidepanel fixed shadow">
 	<p class="text-gray-800 text-center my-2 font-bold text-xl">Parameters</p>
-	<!-- <button type="button" class="closebtn" on:click={() => (visible = false)}>
-		&times;
-	</button> -->
 	<div class="flex flex-col">
 		<div class="flex justify-between my-2">
 			<label for="stroke-color" class="text-gray-800 px-2">
