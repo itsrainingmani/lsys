@@ -21,10 +21,7 @@
 				name="stroke-color"
 				title="Stroke Color Picker"
 				type="color"
-				class="transition-colors duration-100 ease-in-out bg-white shadow-md
-          focus:outline-0 border border-transparent rounded-md py-2 px-2 block
-          w-2/6 appearance-none leading-tight ds-input text-center self-center
-          mr-2"
+				class="transition-colors duration-100 ease-in-out bg-white shadow-md focus:outline-0 border border-transparent rounded-md py-2 px-2 block w-2/6 appearance-none leading-tight ds-input text-center self-center mr-2"
 				bind:value={$strokeColor}
 				aria-label="Stroke Color Picker"
 			/>
@@ -40,9 +37,7 @@
 				min="0.1"
 				max="1"
 				step="0.1"
-				class="transition-colors duration-100 ease-in-out bg-white shadow-md
-          focus:outline-0 border border-transparent rounded-md px-2 block w-2/6
-          appearance-none leading-tight ds-input text-center self-center mr-2"
+				class="transition-colors duration-100 ease-in-out bg-white shadow-md focus:outline-0 border border-transparent rounded-md px-2 block w-2/6 appearance-none leading-tight ds-input text-center self-center mr-2"
 				bind:value={$strokeWidth}
 				aria-label="Stroke Width Picker"
 			/>
@@ -58,9 +53,7 @@
 				min="10"
 				max="120"
 				step="5"
-				class="transition-colors duration-100 ease-in-out bg-white shadow-md
-          focus:outline-0 border border-transparent rounded-md block w-2/6
-          appearance-none leading-tight ds-input text-center self-center mr-2"
+				class="transition-colors duration-100 ease-in-out bg-white shadow-md focus:outline-0 border border-transparent rounded-md block w-2/6 appearance-none leading-tight ds-input text-center self-center mr-2"
 				bind:value={$turnAngle}
 				aria-label="Angle Select"
 			/>
@@ -70,8 +63,7 @@
 <!-- {/if} -->
 
 <button
-	class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border
-  border-gray-400 rounded shadow"
+	class="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow"
 >
 	&#9776;
 </button>

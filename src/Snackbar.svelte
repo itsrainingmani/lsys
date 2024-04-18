@@ -5,8 +5,7 @@
 
 <div
 	transition:fly|global={{ y: 200, duration: 200 }}
-	class="snackbar transition-colors bg-gray-600 shadow-md focus:outline-0
-    border border-transparent rounded-md px-2 py-2 appearance-none leading-tight"
+	class="snackbar transition-colors bg-gray-600 shadow-md focus:outline-0 border border-transparent rounded-md px-2 py-2 appearance-none leading-tight"
 >
 	<p class="white">{message}</p>
 </div>

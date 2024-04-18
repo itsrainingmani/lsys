@@ -109,10 +109,7 @@
 					title="Turtle Formula Input"
 					type="text"
 					placeholder="Rules:"
-					class="transition-colors w-full duration-100 ease-in-out bg-white shadow-md
-          focus:outline-0 border border-transparent placeholder-gray-600
-          rounded-md py-2 px-4 block mr-1 appearance-none leading-tight
-          ds-input text-center"
+					class="transition-colors w-full duration-100 ease-in-out bg-white shadow-md focus:outline-0 border border-transparent placeholder-gray-600 rounded-md py-2 px-4 block mr-1 appearance-none leading-tight ds-input text-center"
 					on:keypress={handleInput}
 					bind:value={formula}
 					aria-label="Turtle Formula Input"
@@ -122,18 +119,14 @@
 					type="number"
 					min="1"
 					max="15"
-					class="transition-colors duration-100 ease-in-out bg-white shadow-md
-          focus:outline-0 border border-transparent placeholder-gray-600
-          rounded-md py-2 px-2 block w-2/6 appearance-none leading-tight
-          ds-input text-center"
+					class="transition-colors duration-100 ease-in-out bg-white shadow-md focus:outline-0 border border-transparent placeholder-gray-600 rounded-md py-2 px-2 block w-2/6 appearance-none leading-tight ds-input text-center"
 					bind:value={iters}
 					aria-label="Formula Iterations"
 				/>
 			</div>
 		</section>
 		<div
-			class="inline-flex transition-colors duration-100 ease-in-out bg-white shadow
-  rounded appearance-none leading-tight mx-2 my-1"
+			class="inline-flex transition-colors duration-100 ease-in-out bg-white shadow rounded appearance-none leading-tight mx-2 my-1"
 		>
 			<button
 				title="Share Fractal"

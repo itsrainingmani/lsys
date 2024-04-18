@@ -67,7 +67,7 @@ export class DrawingContext {
 	constructor(
 		context: CanvasRenderingContext2D,
 		strokeColor = "blue",
-		strokeWidth = 10
+		strokeWidth = 10,
 	) {
 		this.context = context;
 		this.context.strokeStyle = strokeColor;
@@ -99,9 +99,9 @@ export class DrawingContext {
 		this.context.clearRect(0, 0, this.width, this.height);
 	}
 
-	setup() {}
-	scaleBy(scale_factor: number) {}
-	pan(factor: number) {}
+	setup() { }
+	scaleBy(scale_factor: number) { }
+	pan(factor: number) { }
 }
 
 export class Turtle {
