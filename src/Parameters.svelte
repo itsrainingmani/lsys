@@ -1,115 +1,110 @@
 <script lang="ts">
-	import { createCollapsible, melt } from "@melt-ui/svelte";
-	// import { ChevronsUpDown, X } from "$icons/index.js";
-	import { slide } from "svelte/transition";
+	import { createPopover, melt } from "@melt-ui/svelte";
+	import { fade } from "svelte/transition";
+	import { Settings2, X } from "lucide-svelte";
 	import { strokeColor, turnAngle, strokeWidth } from "./stores.js";
 
 	const {
-		elements: { root, content, trigger },
+		elements: { trigger, content, arrow, close },
 		states: { open },
-	} = createCollapsible({
+	} = createPopover({
 		forceVisible: true,
 	});
 </script>
 
-<div
-	use:melt={$root}
-	class="sidepanel fixed mx-auto mb-28 w-[18rem] max-w-full sm:w-[25rem]"
+<button
+	type="button"
+	class="trigger top-0 right-0 m-2 absolute"
+	use:melt={$trigger}
+	aria-label="Update Parameters"
 >
-	<div class="flex items-center justify-between">
-		<span class="text-sm font-semibold text-magnum-900"> Parameters </span>
-		<button
-			use:melt={$trigger}
-			class="relative h-6 w-6 place-items-center rounded-md bg-white text-sm text-magnum-800 shadow hover:opacity-75 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-75"
-			aria-label="Toggle"
-		>
-			<div class="abs-center">
-				{#if $open}
-					<p class="size-4">X</p>
-				{:else}
-					<p class="size-4">^</p>
-				{/if}
-			</div>
+	<Settings2 class="size-4" />
+	<span class="sr-only">Open Popover</span>
+</button>
+
+{#if $open}
+	<div use:melt={$content} transition:fade={{ duration: 100 }} class=" content">
+		<div use:melt={$arrow} />
+		<div class="flex flex-col gap-2.5">
+			<p>Parameters</p>
+			<fieldset>
+				<label for="width">Stroke Color</label>
+				<input
+					type="color"
+					id="width"
+					class="input"
+					placeholder="Color"
+					bind:value={$strokeColor}
+				/>
+			</fieldset>
+			<fieldset>
+				<label for="height">Stroke Width</label>
+				<input
+					type="number"
+					id="height"
+					class="input"
+					min="0.1"
+					max="1"
+					step="0.1"
+					placeholder="Stroke Width"
+					bind:value={$strokeWidth}
+				/>
+			</fieldset>
+			<fieldset>
+				<label for="depth">Turn Angle</label>
+				<input
+					type="number"
+					id="depth"
+					min="10"
+					max="120"
+					step="5"
+					class="input"
+					placeholder="90"
+					bind:value={$turnAngle}
+				/>
+			</fieldset>
+		</div>
+		<button class="close" use:melt={$close}>
+			<X class="size-4" />
 		</button>
 	</div>
-
-	<div class="my-2 rounded-lg bg-white p-3 shadow">
-		<div class="flex justify-between">
-			<label for="stroke-color" class="text-gray-800 px-2">
-				Stroke Color
-			</label>
-			<input
-				name="stroke-color"
-				title="Stroke Color Picker"
-				type="color"
-				class="transition-colors duration-100 ease-in-out bg-white shadow-md focus:outline-0 border border-transparent rounded-md py-2 px-2 block w-2/6 appearance-none leading-tight ds-input text-center self-center mr-2"
-				aria-label="Stroke Color Picker"
-				bind:value={$strokeColor}
-			/>
-		</div>
-	</div>
-
-	<div
-		style:position="absolute"
-		style:top="calc(100% + 10px)"
-		style:right="0"
-		style:left="0"
-	>
-		{#if $open}
-			<div use:melt={$content} transition:slide>
-				<div class="flex flex-col gap-2">
-					<div class="rounded-lg bg-white p-3 shadow">
-						<div class="flex justify-between">
-							<label for="stroke-width" class="text-gray-800 px-2">
-								Stroke Width
-							</label>
-							<input
-								name="stroke-width"
-								title="Stroke Width"
-								type="number"
-								min="0.1"
-								max="1"
-								step="0.1"
-								class="transition-colors duration-100 ease-in-out bg-white shadow-md focus:outline-0 border border-transparent rounded-md px-2 block w-2/6 appearance-none leading-tight ds-input text-center self-center mr-2"
-								aria-label="Stroke Width Picker"
-								bind:value={$strokeWidth}
-							/>
-						</div>
-					</div>
-					<div class="rounded-lg bg-white p-3 shadow">
-						<div class="flex justify-between">
-							<label for="angle-selector" class="text-gray-800 px-2">
-								Turn Angle
-							</label>
-							<input
-								name="angle-selector"
-								title="Angle Selector"
-								type="number"
-								min="10"
-								max="120"
-								step="5"
-								class="transition-colors duration-100 ease-in-out bg-white shadow-md focus:outline-0 border border-transparent rounded-md block w-2/6 appearance-none leading-tight ds-input text-center self-center mr-2"
-								aria-label="Angle Select"
-								bind:value={$turnAngle}
-							/>
-						</div>
-					</div>
-				</div>
-			</div>
-		{/if}
-	</div>
-</div>
+{/if}
 
 <style>
-	.sidepanel {
-		z-index: 1; /* Stay on top */
-		top: 0;
-		right: 0;
+	fieldset {
+		@apply flex items-center gap-5;
 	}
-	.abs-center {
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
+
+	label {
+		@apply w-[75px] text-sm text-neutral-700;
+	}
+
+	p {
+		@apply mb-2 font-medium text-neutral-900;
+	}
+
+	.input {
+		@apply flex h-8 w-full rounded-md border border-magnum-800 bg-transparent px-2.5 text-sm;
+		@apply ring-offset-magnum-300 focus-visible:ring;
+		@apply focus-visible:ring-magnum-400 focus-visible:ring-offset-1;
+		@apply flex-1 items-center justify-center;
+		@apply px-2.5 text-sm leading-none text-magnum-700;
+	}
+
+	.trigger {
+		@apply inline-flex h-9 w-9 items-center justify-center rounded-full bg-white p-0;
+		@apply text-sm font-medium text-magnum-900 transition-colors hover:bg-white/90;
+		@apply focus-visible:ring focus-visible:ring-magnum-400 focus-visible:ring-offset-2;
+	}
+
+	.close {
+		@apply absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full;
+		@apply text-magnum-900 transition-colors hover:bg-magnum-500/10;
+		@apply focus-visible:ring focus-visible:ring-magnum-400 focus-visible:ring-offset-2;
+		@apply bg-white p-0 text-sm font-medium;
+	}
+
+	.content {
+		@apply z-10 w-60 rounded-[4px] bg-white p-5 shadow-sm;
 	}
 </style>
