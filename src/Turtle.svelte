@@ -101,10 +101,6 @@ onMount(() => {
 $: if ($turtleInput.length > 0 && $systemIter > 0 && ctx) {
 	drawTurtle($turtleInput, $systemIter, $turnAngle, $strokeColor, $strokeWidth);
 }
-
-// $: if ($turtleInput.length === 0) {
-// 	infCanvas.clear();
-// }
 </script>
 
 <div>

@@ -14,6 +14,10 @@ import {
 let formula = "";
 let iters = 1;
 
+turtleInput.subscribe((t) => {
+	formula = t;
+});
+
 $: if (formula.length === 0) {
 	turtleInput.update((t) => formula);
 }
