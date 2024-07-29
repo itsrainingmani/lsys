@@ -20,22 +20,22 @@ export class LSystem {
 		}
 		this.rule_map = new Map();
 
-		let [symbols, axiom, rewrite_rules] = system.trim().split(";");
+		const [symbols, axiom, rewrite_rules] = system.trim().split(";");
 		this.axiom = axiom;
-		let symbol_list = new Set(symbols.replace(" ", "").split(","));
+		const symbol_list = new Set(symbols.replace(" ", "").split(","));
 		this.symbols = [...symbol_list.keys()];
 
-		rewrite_rules.split(",").forEach((rule) => {
-			let f = rule.split(":");
+		for (const rule of rewrite_rules.split(",")) {
+			const f = rule.split(":");
 			if (f.length > 2) {
 				throw new Error("Invalid Rule");
 			}
 
-			let [symbol, rewrite_rule] = f;
+			const [symbol, rewrite_rule] = f;
 			if (this.symbols.includes(symbol)) {
 				this.rule_map.set(symbol, rewrite_rule.split(""));
 			}
-		});
+		}
 	}
 
 	rewrite(num_iters: number): string[] {
@@ -43,7 +43,7 @@ export class LSystem {
 		let transformed = this.axiom.split("");
 		for (let i = 0; i < num_iters; i++) {
 			// Apply transformation
-			let substituted = transformed.flatMap((t) => {
+			const substituted = transformed.flatMap((t) => {
 				return this.rule_map.get(t) ?? [t];
 			});
 
@@ -99,15 +99,15 @@ export class DrawingContext {
 		this.context.clearRect(0, 0, this.width, this.height);
 	}
 
-	setup() { }
-	scaleBy(scale_factor: number) { }
-	pan(factor: number) { }
+	setup() {}
+	scaleBy(scale_factor: number) {}
+	pan(factor: number) {}
 }
 
 export class Turtle {
 	context: DrawingContext;
 	pos: Pos;
-	moveAmt: number = 10;
+	moveAmt = 70;
 	turnAngle: number;
 
 	constructor(context: DrawingContext, start_pos: Pos, turnAngle = 45) {
@@ -117,7 +117,7 @@ export class Turtle {
 	}
 
 	advance(by?: number) {
-		let end_pos = {
+		const end_pos = {
 			x:
 				this.pos.x +
 				Math.sin(this.turnAngle * DEG_TO_RAD) * (by ?? this.moveAmt),
@@ -129,7 +129,7 @@ export class Turtle {
 	}
 
 	moveForward(by?: number) {
-		let cur_pos = this.pos;
+		const cur_pos = this.pos;
 		this.advance(by ?? this.moveAmt);
 		this.context.drawLine(cur_pos, this.pos);
 	}

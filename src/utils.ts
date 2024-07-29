@@ -20,19 +20,20 @@ export const typewriter = (node: { value: any }, { speed = 100 }: any) => {
 // The input sequence has the following format:
 // formula,rule1:output1,rule2:output2,...,ruleN:outputN
 export const transformSequence = (formula: string, iters: number) => {
-	let seq = formula.trim().split(",");
+	const seq = formula.trim().split(",");
 	if (seq.length === 0) {
 		return "";
-	} else if (seq.length === 1) {
+	}
+	if (seq.length === 1) {
 		return seq[0];
 	}
-	let cmds = seq.shift(); // these are the basic cmds
-	let rules: { [id: string]: string } = {};
+	const cmds = seq.shift(); // these are the basic cmds
+	const rules: { [id: string]: string } = {};
 
 	// Create a mapping of rules to their outputs
 	// There can't be more than one output for a rule
 	for (const rule of seq) {
-		let r = rule.split(":");
+		const r = rule.split(":");
 		rules[r[0]] = r[1];
 	}
 	let transformed = "";
