@@ -1,5 +1,5 @@
-<footer class="self-center">
-	&copy; 2020. Built by
+<footer class="mt-auto self-center text-xl">
+	&copy; 2024. Built by
 	<a
 		title="My Github Profile"
 		class="text-blue-600"

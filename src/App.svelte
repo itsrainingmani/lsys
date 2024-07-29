@@ -82,6 +82,7 @@ function handleInput(event: KeyboardEvent) {
 	</div>
 	<Turtle />
 </main>
+<Footer />
 
 <style>
 	h1 {
